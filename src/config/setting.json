@@ -1,0 +1,22 @@
+{
+  "dim": 0,
+  "widget": { "Width": 15, "Height": 1 },
+  "2D": {
+    "Frame_Width": 800,
+    "Frame_Height": 600,
+    "Maze_Width": 15,
+    "Maze_Height": 10
+  },
+  "3D": {
+    "Frame_Width": 800,
+    "Frame_Height": 600,
+    "Maze_Width": 15,
+    "Maze_Height": 10,
+    "3Dto2D": {
+      "Frame_Width": 60,
+      "Frame_Height": 100,
+      "Maze_Width": 3,
+      "Maze_Height": 4
+    }
+  }
+}
