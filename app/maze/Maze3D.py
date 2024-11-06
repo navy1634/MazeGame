@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from tkinter import Frame, Canvas, Tk, BOTH
-from Maze.MazeMap import MazeCreate
-from Maze.Maze3Dsub import Maze3Dto2D
 from logging import getLogger
+from tkinter import BOTH, Canvas, Frame, Tk
+
+from maze.Maze3Dsub import Maze3Dto2D
+from maze.MazeMap import MazeCreate
 
 
 class Maze3D(Frame):
@@ -22,16 +23,16 @@ class Maze3D(Frame):
 
     # 3Dマップの参照先
     POS_X = [
-        [-1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1], 
+        [-1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1],
         [3, 3, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0],
-        [1, 0, -1, 1, 0, -1, 1, 0, -1, 1, 0, -1], 
+        [1, 0, -1, 1, 0, -1, 1, 0, -1, 1, 0, -1],
         [-3, -3, -3, -2, -2, -2, -1, -1, -1, 0, 0, 0],
     ]
     POS_Y = [
         [-3, -3, -3, -2, -2, -2, -1, -1, -1, 0, 0, 0],
-        [-1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1], 
+        [-1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1],
         [3, 3, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0],
-        [1, 0, -1, 1, 0, -1, 1, 0, -1, 1, 0, -1], 
+        [1, 0, -1, 1, 0, -1, 1, 0, -1, 1, 0, -1],
     ]
 
 
@@ -42,14 +43,14 @@ class Maze3D(Frame):
         self.Frame_Width = conf["3D"]["Frame_Width"]
         self.Frame_Height = conf["3D"]["Frame_Height"]
         self.maze = MazeCreate()
-    
+
 
     # 迷路生成
     def create_maze(self, flag=False) -> Canvas:
         self.canvas = Canvas(
-            self.parent, 
-            width=self.Frame_Width, 
-            height=self.Frame_Height, 
+            self.parent,
+            width=self.Frame_Width,
+            height=self.Frame_Height,
             background='#020202'
         )
         self.canvas.pack(fill=BOTH, expand=True)
@@ -71,13 +72,13 @@ class Maze3D(Frame):
     # マップ生成
     def load_map(self, Height, Width, seed=None):
         self.map_data = self.maze.create_maze(Height, Width, seed=seed)
-        
+
 
 
     # 迷路解答
     def get_ans(self):
         self.map_data = self.maze.solve_maze()
-    
+
 
     # 初期設定
     def return_default(self):
@@ -137,12 +138,12 @@ class Maze3D(Frame):
         self.canvas.delete("all")
         self.draw_maze()
         self.subcanvas.draw_map()
-    
+
     def draw_map_event(self):
         # マップとプレイヤーを描画する
         self.canvas.delete("all")
         self.direction = self._default_direction()
-        self.draw_maze()    
+        self.draw_maze()
         self.subcanvas.draw_map()
 
 
@@ -222,19 +223,19 @@ class Maze3D(Frame):
             self.px = px_tmp
         if self.py < 0 or self.py >= len(self.map_data):
             self.py = py_tmp
-        
-        # 移動先が壁なら元の位置に戻す 
+
+        # 移動先が壁なら元の位置に戻す
         mv = self.map_data[self.py][self.px]
         if mv == 0:
             self.px = px_tmp
             self.py = py_tmp
             self.logger.debug('STAY', extra={'addinfo': "壁に激突"})
             return
-        
+
         self.draw_map()
         self.parent.parent.Log_Frame.getLoc(self.px, self.py)
         self.logger.debug('MOVE', extra={'addinfo': "player={0},{1}, direction={2}".format(self.px, self.py, self.direction)})
-        
+
         # ゴールにたどり着いたか？
         if mv == 3:
             self.parent.parent.parent.raise_frame(self.parent.parent.parent.goal_frame)
@@ -257,7 +258,7 @@ class Maze3D(Frame):
             if map_viz[11] == 4:
                 self.canvas.create_line(800, 470, 800, 520, fill=self.COLOR4)
 
-    def _wall_row_second(self, map_viz): 
+    def _wall_row_second(self, map_viz):
         if map_viz[6] == 0:
             self.canvas.create_line(100, 130, 200, 180, 200, 420, 100, 470, fill=self.COLOR1)
         else:
@@ -308,7 +309,7 @@ class Maze3D(Frame):
         self.canvas = Canvas(
             win,
             width=800,
-            height=600, 
+            height=600,
             background='#020202'
         )
         self.canvas.pack()

@@ -15,16 +15,16 @@ class GoalFrame(Frame):
         self.set_frame()
 
     def set_frame(self) -> None:
-        Label(self, text='GAME CLEAR !!!', font=('HGS行書体', '100'), width=self.Widget_Width, height=self.Widget_Height).pack()
+        Label(self, text='GAME CLEAR !!!', font=('HGS行書体', 100), width=self.Widget_Width, height=self.Widget_Height).pack()
         frame = self.set_button()
         frame.pack()
 
     def set_button(self):
         frame = Frame(self)
-        Button(frame, text='新しく開始', width=self.Widget_Width, height=self.Widget_Height, command=self.new_game, font=("HGS行書体", "15")).grid(row=0, column=0)
-        Button(frame, text='やり直す', width=self.Widget_Width, height=self.Widget_Height, command=self.restart, font=("HGS行書体", "15")).grid(row=0, column=1)
-        Button(frame, text='スタート画面へ', width=self.Widget_Width, height=self.Widget_Height, command=self.start_frame, font=("HGS行書体", "15")).grid(row=1, column=0)
-        Button(frame, text='終了', width=self.Widget_Width, height=self.Widget_Height, command=self.close, font=("HGS行書体", "15")).grid(row=1, column=1)
+        Button(frame, text='新しく開始', width=self.Widget_Width, height=self.Widget_Height, command=self.new_game, font=("HGS行書体", 15)).grid(row=0, column=0)
+        Button(frame, text='やり直す', width=self.Widget_Width, height=self.Widget_Height, command=self.restart, font=("HGS行書体", 15)).grid(row=0, column=1)
+        Button(frame, text='スタート画面へ', width=self.Widget_Width, height=self.Widget_Height, command=self.start_frame, font=("HGS行書体", 15)).grid(row=1, column=0)
+        Button(frame, text='終了', width=self.Widget_Width, height=self.Widget_Height, command=self.close, font=("HGS行書体", 15)).grid(row=1, column=1)
         return frame
 
     def restart(self) -> None:

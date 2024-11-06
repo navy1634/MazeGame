@@ -6,4 +6,4 @@ from os import getcwd
 BASE_DIR = getcwd()
 IMAGE_DIR = BASE_DIR + "/images"
 LOG_DIR = BASE_DIR + "/logs"
-SRC_DIR = BASE_DIR + "/src"
+SRC_DIR = BASE_DIR + "/app"

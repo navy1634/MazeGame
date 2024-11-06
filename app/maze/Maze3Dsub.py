@@ -1,25 +1,26 @@
 # -*- coding: utf-8 -*-
 
-from tkinter import Frame
-from PIL import Image, ImageTk
 from logging import getLogger
-from config.conf import BASEPATH
+from tkinter import Frame
+
+from config.conf import IMAGE_DIR
+from PIL import Image, ImageTk
 
 
 class Maze3Dto2D(Frame):
     logger = getLogger("maze_root").getChild(__name__)
     # 3Dマップの参照先
     POS_X = [
-        [-1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1], 
+        [-1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1],
         [3, 3, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0],
-        [1, 0, -1, 1, 0, -1, 1, 0, -1, 1, 0, -1], 
+        [1, 0, -1, 1, 0, -1, 1, 0, -1, 1, 0, -1],
         [-3, -3, -3, -2, -2, -2, -1, -1, -1, 0, 0, 0],
     ]
     POS_Y = [
         [-3, -3, -3, -2, -2, -2, -1, -1, -1, 0, 0, 0],
-        [-1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1], 
+        [-1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1],
         [3, 3, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0],
-        [1, 0, -1, 1, 0, -1, 1, 0, -1, 1, 0, -1], 
+        [1, 0, -1, 1, 0, -1, 1, 0, -1, 1, 0, -1],
     ]
 
     canvas_width = 60
@@ -35,14 +36,14 @@ class Maze3Dto2D(Frame):
     def create_maze(self):
         self.canvas = self.parent.canvas
         # マップとプレイヤーを描画する
-        self.player_image = self._load_player(BASEPATH+"/resource/player.png")
+        self.player_image = self._load_player(IMAGE_DIR+"/player.png")
         self.draw_maze()
         self.draw_player(self.player_image)
         return self.canvas
-    
+
 
     def get_map_viz(self) -> list:
-        map_viz = list()
+        map_viz = []
         for i in range(12):
             map_x = self.parent.px + self.POS_X[self.parent.direction][i]
             map_y = self.parent.py + self.POS_Y[self.parent.direction][i]
@@ -74,11 +75,16 @@ class Maze3Dto2D(Frame):
                 # 該当場所の値を得る
                 p = map_viz[y*3+x]
                 # 値に応じた色を決定する
-                if p == 0: color = "#404040"
-                if p == 1: color = "white"
-                if p == 2: color = "red"
-                if p == 3: color = "blue"
-                if p == 4: color = "green"
+                if p == 0:
+                    color = "#404040"
+                if p == 1:
+                    color = "white"
+                if p == 2:
+                    color = "red"
+                if p == 3:
+                    color = "blue"
+                if p == 4:
+                    color = "green"
                 # 正方形を描画
                 self.canvas.create_rectangle(
                     x1, y1, x2, y2, # 座標
@@ -89,7 +95,7 @@ class Maze3Dto2D(Frame):
     # プレイヤー生成
     def _load_player(self, image_filename):
         """
-        プレイヤーの画像を読み込む        
+        プレイヤーの画像を読み込む
         """
         img = Image.open(image_filename)
         img_tk = ImageTk.PhotoImage(img)

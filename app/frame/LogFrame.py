@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from tkinter import Frame, ttk, Text
-from datetime import datetime
+from datetime import datetime, timezone
 from logging import getLogger
+from tkinter import Frame, Text, ttk
 
 
 class LogFrame(Frame):
@@ -24,7 +24,7 @@ class LogFrame(Frame):
         self.loc_widget['state'] = 'disabled'
 
     def set_log(self) -> None:
-        self.logger.debug("SET", extra={"addinfo": f"ログフレーム生成"})
+        self.logger.debug("SET", extra={"addinfo": "ログフレーム生成"})
         self.log_widget = Text(self, state='disabled', borderwidth=5, width=21, height=15, wrap='none', padx=10, pady=10)
         ys = ttk.Scrollbar(self, orient = 'vertical', command = self.log_widget.yview)
         self.log_widget['yscrollcommand'] = ys.set
@@ -32,7 +32,7 @@ class LogFrame(Frame):
         ys.grid(row=1, column=1, sticky='ns')
 
     def writeToLog(self, msg) -> None:
-        message = "{time}  {message}".format(time=datetime.strftime(datetime.now(), '%H:%M:%S'), message=msg)
+        message = "{time}  {message}".format(time=datetime.strftime(datetime.now(timezone.utc), '%H:%M:%S'), message=msg)
         self.log_widget['state'] = 'normal'
         if self.log_widget.index('end-1c')!='1.0':
             self.log_widget.insert('end', '\n')
@@ -40,4 +40,3 @@ class LogFrame(Frame):
         self.log_widget.insert('end', message)
         self.log_widget.see('end')
         self.log_widget['state'] = 'disabled'
-

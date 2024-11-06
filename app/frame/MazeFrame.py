@@ -2,19 +2,19 @@
 
 import random
 from tkinter import Frame
-from Maze.Maze2D import Maze2D
-from Maze.Maze3D import Maze3D
+from maze.Maze2D import Maze2D
+from maze.Maze3D import Maze3D
 from logging import getLogger
 
 
 class MazeFrame(Frame):
     logger = getLogger("maze_root").getChild("Maze")
-    def __init__(self, parent, conf):
+    def __init__(self, parent, conf) -> None:
         super().__init__(parent)
         self.parent = parent
         self.conf = conf
         self.px, self.py = 1, 1
-        self.seed = None
+        self.seed = 0
         self.maze_2d = Maze2D(self, conf=self.conf)
         self.maze_3d = Maze3D(self, conf=self.conf)
         self.bind_id_L = self.parent.parent.bind("<KeyPress-Left>", self.maze_2d._arrow_key_press)
@@ -64,7 +64,7 @@ class MazeFrame(Frame):
         self.grid(row=1, column=0, rowspan=2)
 
         # ログ処理
-        self.parent.Log_Frame.writeToLog(f'迷路開始')
+        self.parent.Log_Frame.writeToLog('迷路開始')
         self.parent.Log_Frame.getLoc(self.px, self.py)
         self.logger.debug("GENERATE", extra={"addinfo": f"迷路生成 ({dim+2}D)"})
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from Frame.Window import MainWindow
+from frame.Window import MainWindow
 from config.SetLog import logger_conf
 
 

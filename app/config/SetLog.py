@@ -5,7 +5,7 @@ from logging import getLogger
 from logging import StreamHandler, FileHandler, Formatter
 from logging import DEBUG
 # from logging import WARNING, ERROR, CRITICAL, config
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from config.conf import LOG_DIR
 
 
@@ -13,7 +13,7 @@ def logger_conf():
     """
     ログ取得に関する関数
     """
-    time = datetime.strftime(datetime.now() + timedelta(hours=9), "%Y%m%d%H%M%S%f")
+    time = datetime.strftime(datetime.now(timezone.utc) + timedelta(hours=9), "%Y%m%d%H%M%S%f")
     # ロガーの生成
     logger = getLogger("maze_root")
     # 出力レベルの設定

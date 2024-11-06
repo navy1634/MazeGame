@@ -2,10 +2,10 @@
 
 import json
 from tkinter import Tk, Menu
-from Frame.MainFrame import MainFrame
-from Frame.StartFrame import StartFrame
-from Frame.OperationFrame import OperationFrame
-from Frame.GoalFrame import GoalFrame
+from frame.MainFrame import MainFrame
+from frame.StartFrame import StartFrame
+from frame.OperationFrame import OperationFrame
+from frame.GoalFrame import GoalFrame
 from logging import getLogger
 from config.conf import SRC_DIR
 
@@ -87,7 +87,7 @@ class MainWindow(Tk):
 
         self.change_dimension(dim, val=True)
 
-    def set_menu(self) -> None:
+    def set_menu(self) -> Menu:
         """
         メニューバーの生成を行う関数
         """
@@ -107,11 +107,11 @@ class MainWindow(Tk):
         # 親ウィンドウのメニューに、作成したメニューバーを設定
         return menubar
 
-    def get_setting(self) -> None:
+    def get_setting(self) -> dict:
         """
         設定ファイルの読み込み
         """
-        with open(SRC_DIR + "/setting.json", "r", encoding="utf-8") as f:
+        with open(SRC_DIR + "/config/setting.json", "r", encoding="utf-8") as f:
             conf_data = json.load(f)
             f.close()
         return conf_data

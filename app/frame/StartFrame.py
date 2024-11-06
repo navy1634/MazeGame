@@ -7,7 +7,7 @@ from logging import getLogger
 class StartFrame(Frame):
     logger = getLogger("maze_root").getChild("START")
 
-    def __init__(self, parent, conf):
+    def __init__(self, parent, conf) -> None:
         super().__init__(parent)
         self.parent = parent
         self.conf = conf
@@ -16,7 +16,7 @@ class StartFrame(Frame):
         self.set_frame()
 
     def set_frame(self):
-        name_label = Label(self, text="迷路ゲーム", font=("HGS行書体", "50"), width=30, height=3)
+        name_label = Label(self, text="迷路ゲーム", font=("HGS行書体", 50), width=30, height=3)
         button_frame = self.set_button()
         setting_frame = self.setting_frame()
         radio_frame = self.radio_frame()
@@ -29,8 +29,8 @@ class StartFrame(Frame):
     def set_button(self) -> Frame:
         frame = Frame(self, height=15, width=30)
 
-        start_button = Button(frame, text="START", width=self.Widget_Width, height=self.Widget_Height, command=lambda: [self.parent.set_maze_frame(), self.parent.raise_frame(self.parent.maze_frame)], font=("HGS行書体", "15"))
-        setting_button = Button(frame, text="操作方法", width=self.Widget_Width, height=self.Widget_Height, command=lambda : self.parent.raise_frame(self.parent.conf_frame), font=("HGS行書体", "15"))
+        start_button = Button(frame, text="START", width=self.Widget_Width, height=self.Widget_Height, command=lambda: [self.parent.set_maze_frame(), self.parent.raise_frame(self.parent.maze_frame)], font=("HGS行書体", 15))
+        setting_button = Button(frame, text="操作方法", width=self.Widget_Width, height=self.Widget_Height, command=lambda : self.parent.raise_frame(self.parent.conf_frame), font=("HGS行書体", 15))
 
         start_button.pack()
         setting_button.pack()
