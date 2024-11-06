@@ -10,15 +10,10 @@
     - パッケージマネージャ : uv
     - ライブラリ :  Tkinter
 
-3. [仕様](https://github.com/navy1634/Portfolio/tree/main/Maze/specification)
-    - 仕様書
-        - 要求仕様書
-        - docx 形式で作成
-    - 状態遷移図
-        - ゲームに関する状態遷移図を作成
+3. [仕様](https://github.com/navy1634/Portfolio/MazeGame/demo)
     - デモ動画
         - ゲームの操作方法に関するプレイ動画
-        - ```.mp4```形式のファイルで、5分程度
+        - `.mp4`形式のファイルで、5分程度
    
 ## 2. 仕様
 1.	概要
