@@ -322,10 +322,3 @@ class Maze3D(Frame):
         win.bind("<KeyPress>", self._arrow_key_press)
 
         win.mainloop()
-
-
-
-if __name__ == '__main__':
-    maze = Maze3D(None, 10, 10)
-    maze._create_window()
-
