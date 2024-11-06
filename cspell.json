@@ -6,7 +6,9 @@
     "words": [
         "Dsub",
         "keysym",
+        "mazelib",
         "subcanvas",
+        "Tkinter",
         "vectorize"
     ],
     "ignoreWords": [],

@@ -9,11 +9,6 @@
     - バージョン :  3.11
     - パッケージマネージャ : uv
     - ライブラリ :  Tkinter
-```bash
-pip install uv
-uv sync
-uv run app/main.py
-```
 
 3. [仕様](https://github.com/navy1634/Portfolio/tree/main/Maze/specification)
     - 仕様書
@@ -25,7 +20,7 @@ uv run app/main.py
         - ゲームの操作方法に関するプレイ動画
         - ```.mp4```形式のファイルで、5分程度
    
-## 2	仕様
+## 2. 仕様
 1.	概要
     - 迷路ゲームを出題するGUIアプリケーションの開発
     - スタートの座標は(1, 1), ゴールの座標は(迷路サイズ-1, 迷路サイズ-1)とする
@@ -51,7 +46,10 @@ uv run app/main.py
     - 3D : 右、左、下の矢印キーを押すとその方向を向く
     - もし進むことができなければ、進まない
 
- 
 
-
-
+## 3. 実行手順
+```bash
+pip install uv
+uv sync
+uv run app/main.py
+```
