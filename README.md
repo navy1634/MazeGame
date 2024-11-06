@@ -6,8 +6,14 @@
 2.	作業・動作環境
     - 使用言語   :  Python
     - OS         :  Windows10, 11
-    - バージョン :  3.10 以上
+    - バージョン :  3.11
+    - パッケージマネージャ : uv
     - ライブラリ :  Tkinter
+```bash
+pip install uv
+uv sync
+uv run app/main.py
+```
 
 3. [仕様](https://github.com/navy1634/Portfolio/tree/main/Maze/specification)
     - 仕様書

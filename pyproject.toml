@@ -1,0 +1,66 @@
+[project]
+name = "maze_2d3d"
+version = "0.1.0"
+description = "迷路ゲーム"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "setuptools>=75.3.0",
+    "mazelib==0.9.14",
+    "pillow>=11.0.0",
+]
+
+[tool.setuptools]
+packages = ["app", "logs", "images"]
+
+
+[build-system]
+requires = ["setuptools>=75.3.0", "wheel", "cython>=3.0.11"]
+build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+# The tabulation size to calculate line length.
+indent-width = 4
+line-length = 200
+
+[tool.ruff.lint]
+# A list of rule codes or prefixes to select
+select = ["B", "E", "F", "I", "N", "W", "ANN", "C4", "C90", "DTZ", "T20", "PT", "PL", "YTT"]
+# A list of rule codes or prefixes to ignore
+ignore = ["F401", "F841", "W505", "ARG", "I001", "ANN001", "ANN101", "ANN102", "ANN201", "B008", "PLR2004", "N802", "N806", "N803", "ANN202", "E501", "E402"]
+
+# A list of rule codes or prefixes to consider autofixable
+fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT"]
+# A list of rule codes or prefixes to consider non-autofix-able.
+unfixable = ["F401", "F841", "W505", "ARG"]
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    "__pycache__",
+    "__pypackages__",
+    ".venv",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+    "E501", # Line too long / Mismatch for test data
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+python_version = "3.11"
+no_strict_optional = true
+ignore_missing_imports = true
+check_untyped_defs = true
+
+[tool.pytest.ini_options]
+disable_test_id_escaping_and_forfeit_all_rights_to_community_support = true
+
+[tool.uv]
+dev-dependencies = [
+]

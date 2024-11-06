@@ -41,17 +41,3 @@ class MazeCreate(Maze):
         mz_str = str(self.mz).replace('#', "0").replace(' ', '1').replace('S', '2').replace('E', '3').replace("+", "4").split('\n')
         mz_str_list = [list(x) for x in mz_str]
         return vectorize(int)(mz_str_list)
-
-
-
-if __name__ == '__main__':
-    maze = MazeCreate()
-    N = 20 # 縦の通路の数
-    M = 20 # 横の通路の数
-    map_data = maze.create_maze(N, M)
-    # for mp in map_data:
-    #     print(mp)
-
-    map_ans = maze.solve_maze()
-    for mp in map_ans:
-        print(mp)

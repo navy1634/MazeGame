@@ -88,7 +88,7 @@ class Maze3D(Frame):
 
     # 迷路解読
     def get_map_viz(self) -> list:
-        map_viz = list()
+        map_viz = []
         for i in range(len(self.POS_X[0])):
             map_x = self.px + self.POS_X[self.direction][i]
             map_y = self.py + self.POS_Y[self.direction][i]

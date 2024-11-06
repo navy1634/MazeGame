@@ -4,9 +4,9 @@
 *ipynb_checkpoints
 .venv
 .vscode
+logs/*
 
 # files
 .env
 *.so
 *.log
-*.toml
