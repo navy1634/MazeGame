@@ -11,7 +11,7 @@ logger = getLogger("maze_root").getChild("Goal")
 
 
 class GoalView(Frame):
-    def __init__(self, parent: Tk | Frame, controller: GameController, conf) -> None:
+    def __init__(self, parent: Tk | Frame, controller: GameController) -> None:
         super().__init__(parent)
         self.parent = parent
         self.controller = controller

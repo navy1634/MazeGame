@@ -12,11 +12,10 @@ logger = getLogger("maze_root").getChild("START")
 
 
 class StartView(Frame):
-    def __init__(self, parent: Tk | Frame, controller: GameController, conf) -> None:
+    def __init__(self, parent: Tk | Frame, controller: GameController) -> None:
         super().__init__(parent)
         self.parent = parent
         self.controller = controller
-        self.conf = conf
         self.widget_width = 30
         self.widget_height = 3
         self.set_frame()

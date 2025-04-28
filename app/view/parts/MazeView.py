@@ -16,11 +16,10 @@ logger = getLogger("maze_root").getChild("Maze")
 
 
 class MazeView(Frame):
-    def __init__(self, parent: Tk | Frame, controller: GameController, canvas: MazeCanvas, conf) -> None:
+    def __init__(self, parent: Tk | Frame, controller: GameController, canvas: MazeCanvas) -> None:
         super().__init__(parent)
         self.parent = parent
         self.controller = controller
-        self.conf = conf
         self.px, self.py = 1, 1
         self.seed = 0
         self.canvas = canvas

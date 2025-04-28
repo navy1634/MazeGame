@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from logging import getLogger
-from tkinter import Canvas, Event, Frame, Tk
+from tkinter import Canvas, Frame, Tk
 from typing import TYPE_CHECKING, overload
 
 from PIL import Image, ImageTk
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 class MazeCanvas(Canvas):
-    def __init__(self, parent: Tk | Frame, controller: GameController, model: MazeMap, conf) -> None:
+    def __init__(self, parent: Tk | Frame, controller: GameController, model: MazeMap) -> None:
         super().__init__(parent)
         self.controller = controller
         self.model = model

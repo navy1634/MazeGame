@@ -15,10 +15,10 @@ class OptionView(Frame):
         super().__init__(parent)
         self.parent = parent
         self.controller = controller
-        self.Widget_Width = conf["widget"]["Width"]
-        self.Widget_Height = conf["widget"]["Height"]
+        self.widget_width = conf["widget"]["Width"]
+        self.widget_height = conf["widget"]["Height"]
 
-        Button(self, text="reset", command=self.controller.maze_reset, width=self.Widget_Width, height=self.Widget_Height).pack(anchor="center")
-        Button(self, text="restart", command=self.controller.maze_restart, width=self.Widget_Width, height=self.Widget_Height).pack(anchor="center")
-        Button(self, text="solve", command=self.controller.maze_solve, width=self.Widget_Width, height=self.Widget_Height).pack(anchor="center")
-        Button(self, text="close", command=self.controller.app.win_close, width=self.Widget_Width, height=self.Widget_Height).pack(anchor="center")
+        Button(self, text="reset", command=self.controller.maze_reset, width=self.widget_width, height=self.widget_height).pack(anchor="center")
+        Button(self, text="restart", command=self.controller.maze_restart, width=self.widget_width, height=self.widget_height).pack(anchor="center")
+        Button(self, text="solve", command=self.controller.maze_solve, width=self.widget_width, height=self.widget_height).pack(anchor="center")
+        Button(self, text="close", command=self.controller.app.win_close, width=self.widget_width, height=self.widget_height).pack(anchor="center")
