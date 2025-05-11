@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import random
+
 import numpy as np
 from mazelib import Maze
 from mazelib.generate.Prims import Prims
@@ -12,6 +14,7 @@ from app.config.type import DIRECTION
 class MazeMap(Maze):
     def __init__(self) -> None:
         self.px, self.py = 1, 1  # プレイヤーの初期位置
+        self.seed: int | None = None
         self.direction = DIRECTION.NORTH  # プレイヤーの初期方向
 
     def create_maze(self, N: int, M: int, seed: int | None = None):
@@ -48,12 +51,23 @@ class MazeMap(Maze):
         """
         迷路のサイズを取得する
         """
-        return self.generator.N, self.generator.M
+        return self.generator.H, self.generator.W
 
     # 初期設定
     def set_default_position(self) -> None:
         self.px = 1
         self.py = 1
+
+    def set_seed(self, seed: int | None = None) -> None:
+        """乱数のシードをセットする関数
+
+        Args:
+            seed (int): 乱数のシード
+        """
+        if seed is None:
+            self.seed = random.randint(0, 256)
+        else:
+            self.seed = seed
 
     def get_player_position(self) -> tuple[int, int]:
         """

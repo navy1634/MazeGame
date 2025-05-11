@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from os import getcwd
 
 # プロジェクトファイルまでの絶対パス

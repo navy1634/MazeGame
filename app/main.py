@@ -4,13 +4,13 @@ from tkinter import Frame, Label, Menu, Tk
 from app.controller.GameController import GameController
 from app.lib.SetLog import logger_conf
 from app.model.MazeMap import MazeMap
-from app.view.parts.GoalView import GoalView
-from app.view.parts.LogView import LogView
-from app.view.parts.MazeCanvas import MazeCanvas
-from app.view.parts.MazeView import MazeView
-from app.view.parts.OperationView import OperationView
-from app.view.parts.OptionView import OptionView
-from app.view.parts.StartView import StartView
+from app.view.GoalView import GoalView
+from app.view.LogView import LogView
+from app.view.MazeCanvas import MazeCanvas
+from app.view.MazeView import MazeView
+from app.view.OperationView import OperationView
+from app.view.OptionView import OptionView
+from app.view.StartView import StartView
 
 logger = getLogger("maze_root").getChild(__name__)
 
@@ -20,11 +20,11 @@ class App(Tk):
         super().__init__(parent)
         self.parent = parent
         logger.debug("START", extra={"addinfo": "ウィンドウ生成"})
-        self.conf = "config"
-        # Modelのインスタンス化
+        # Modelのインスタンス化0
         self.model = MazeMap()
         # Controllerのインスタンス化
-        self.controller = GameController(self, self.model, self.conf)
+        self.controller = GameController(self, self.model)
+        self.controller.set_maze_controller()
         self._set_frame()
         self.controller.set_view(
             start_view=self.start_view,
@@ -33,6 +33,9 @@ class App(Tk):
             operation_view=self.operation_view,
             log_view=self.log_view,
         )
+        self.controller.maze_2d_controller.set_maze_view(self.maze_view)
+        self.controller.maze_3d_controller.set_maze_view(self.maze_view)
+        self.controller.maze_controller.set_maze_view(self.maze_view)
         self.config(menu=self.set_menu())
         self.set_config()
 
@@ -47,27 +50,25 @@ class App(Tk):
         # frame.tkraise() 用の設定
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        # 設定情報の取得
-        self.conf_data = self.controller.get_setting()
         # フレームのサイズ変更を不可能に
         self.resizable(width=False, height=False)
         # 閉じるボタン
         self.protocol("WM_DELETE_WINDOW", self.win_close)
-        self.bind("<Control-Key-q>", lambda e: self.win_close())
+        self.bind("<Control-Key-q>", lambda _: self.win_close())
         # ホーム画面に戻る
-        self.bind("<Control-Key-h>", lambda e: self.controller.raise_frame(self.controller.start_view))
-        self.bind("<Control-Key-d>", lambda e: self.controller.raise_frame(self.controller.maze_view))
-        self.bind("<Control-Key-c>", lambda e: self.controller.raise_frame(self.controller.operation_view))
+        self.bind("<Control-Key-h>", lambda _: self.controller.raise_frame(self.controller.start_view))
+        self.bind("<Control-Key-d>", lambda _: self.controller.raise_frame(self.controller.maze_view))
+        self.bind("<Control-Key-c>", lambda _: self.controller.raise_frame(self.controller.operation_view))
 
     def _set_frame(self) -> None:
         """フレームの設置"""
         # 迷路画面の生成
-        self.canvas = MazeCanvas(self, self.controller, conf=self.conf)
+        self.canvas = MazeCanvas(self, self.controller, self.model)
         self.main_view = Frame(self)
         maze_index = Label(self.main_view, text="↑ → ↓ ← キーで操作、Ctrl+Cで操作方法の表示、ゴールに辿り着くとクリア")
-        self.maze_view = MazeView(self.main_view, self.controller, canvas=self.canvas, conf=self.conf)
-        self.option_view = OptionView(self.main_view, self.controller, conf=self.conf)
-        self.log_view = LogView(self.main_view, self.controller, conf=self.conf)
+        self.maze_view = MazeView(self.main_view, self.controller, canvas=self.canvas)
+        self.option_view = OptionView(self.main_view, self.controller, self.controller.conf)
+        self.log_view = LogView(self.main_view, self.controller)
 
         # 迷路画面の配置設定
         maze_index.grid(row=0, column=0)
@@ -77,15 +78,15 @@ class App(Tk):
 
         # 各画面の生成
         # スタート画面
-        self.start_view = StartView(self, self.controller, conf=self.conf)
+        self.start_view = StartView(self, self.controller)
         self.start_view.grid(row=0, column=0, sticky="nsew")
         # 迷路画面
         self.main_view.grid(row=0, column=0, sticky="nsew")
         # 操作方法確認画面
-        self.operation_view = OperationView(self, self.controller, conf=self.conf)
+        self.operation_view = OperationView(self, self.controller)
         self.operation_view.grid(row=0, column=0, sticky="nsew")
         # ゴール画面
-        self.goal_frame = GoalView(self, self.controller, conf=self.conf)
+        self.goal_frame = GoalView(self, self.controller)
         self.goal_frame.grid(row=0, column=0, sticky="nsew")
 
         self.controller.raise_frame(self.start_view)
@@ -104,11 +105,23 @@ class App(Tk):
 
         # メニューバーに各メニューを追加
         menubar.add_cascade(label="Frame", menu=menu_file)
-        menubar.add_cascade(label="Dimension", command=lambda: self.controller.change_dim_for_menu())
+        menubar.add_cascade(label="Dimension", command=lambda: self.change_dim_for_menu())
         menubar.add_cascade(label="Config", command=lambda: self.controller.raise_frame(self.controller.operation_view), accelerator="Ctrl+C")
 
         # 親ウィンドウのメニューに、作成したメニューバーを設定
         return menubar
+
+    def change_dim_for_menu(self) -> None:
+        """メニューバー用の関数
+        2D, 3Dを切り替える
+        """
+        dim = self.start_view.radio_value.get()
+        if dim == 0:
+            dim = 1
+        else:
+            dim = 0
+
+        self.controller.change_dimension(dim, val=True)
 
     def win_close(self) -> None:
         """画面を閉じた時の挙動"""
@@ -124,12 +137,8 @@ class App(Tk):
 
 def main():
     logger = logger_conf()
-    logger.debug("START", extra={"addinfo": "処理開始"})
-
     app = App()
     app.run()
-
-    logger.debug("END", extra={"addinfo": "処理終了"})
 
 
 if __name__ == "__main__":
