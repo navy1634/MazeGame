@@ -14,23 +14,10 @@ if TYPE_CHECKING:
 
 class MazeCanvas(Canvas):
     def __init__(self, parent: Tk | Frame, controller: GameController, model: MazeMap) -> None:
-        super().__init__(parent)
+        super().__init__(parent, width=800, height=600, background="#020202")
         self.controller = controller
         self.model = model
         self.cell_size = 20
-
-    def calc_canvas_width(self):
-        self.width = len(self.model.map_data[0]) * self.cell_size
-        self.height = len(self.model.map_data) * self.cell_size
-
-    # プレイヤー描画
-    def draw_player(self, player_image: ImageTk.PhotoImage) -> None:
-        self.create_image(800 - self.tile_size_x * 2 + 10, 600 - self.tile_size_y * 2 + 10, image=player_image, anchor="nw")
-
-    def maze_config(self):
-        self.maze_width, self.maze_height = self.model.get_maze_size()
-        self.tile_size_x = self.width / (self.maze_width * 2 + 1)
-        self.tile_size_y = self.height / (self.maze_height * 2 + 1)
 
     # プレイヤー生成
     def load_player(self, image_file_name: str) -> ImageTk.PhotoImage:
@@ -41,17 +28,31 @@ class MazeCanvas(Canvas):
         img_tk = ImageTk.PhotoImage(img)
         return img_tk
 
+    # プレイヤー描画
+    def draw_player(self, player_image: ImageTk.PhotoImage) -> None:
+        self.player = self.create_image(800 - self.tile_size_x * 2 + 10, 600 - self.tile_size_y * 2 + 10, image=player_image, anchor="nw")
+
+    # タイルサイズの計算
+    def calc_canvas_width(self):
+        self.width = len(self.model.map_data[0]) * self.cell_size
+        self.height = len(self.model.map_data) * self.cell_size
+
+    def maze_config(self):
+        self.maze_width, self.maze_height = self.model.get_maze_size()
+        self.tile_size_x = self.width / (self.maze_width * 2 + 1)
+        self.tile_size_y = self.height / (self.maze_height * 2 + 1)
+
     # 迷路表示
     def draw_map(self) -> None:
         # マップとプレイヤーを描画する
         self.delete("all")
-        self.draw_maze(0)
+        self.draw_maze(self.controller.maze_controller.dim)
 
     def draw_map_event(self) -> None:
         # マップとプレイヤーを描画する
         self.delete("all")
         self.direction = self.model.set_direction(self.model._default_direction())
-        self.draw_maze(0)
+        self.draw_maze(self.controller.maze_controller.dim)
 
     # 迷路解読
     def draw_maze(self, dim):
@@ -61,6 +62,7 @@ class MazeCanvas(Canvas):
             self.draw_maze_3d()
             self.draw_maze_3dto2d()
 
+    # 迷路描画
     # 2D
     def draw_maze_2d(self) -> None:
         # 左上から右下へと描画

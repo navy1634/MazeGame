@@ -1,26 +1,24 @@
 from logging import getLogger
-from tkinter import Frame, Label, Menu, Tk
+from tkinter import Menu, Tk
 
 from app.controller.GameController import GameController
 from app.lib.SetLog import logger_conf
 from app.model.MazeMap import MazeMap
 from app.view.GoalView import GoalView
-from app.view.LogView import LogView
-from app.view.MazeCanvas import MazeCanvas
 from app.view.MazeView import MazeView
 from app.view.OperationView import OperationView
-from app.view.OptionView import OptionView
 from app.view.StartView import StartView
 
 logger = getLogger("maze_root").getChild(__name__)
 
 
 class App(Tk):
-    def __init__(self, parent: None = None) -> None:
-        super().__init__(parent)
-        self.parent = parent
+    """アプリのメイン部分"""
+
+    def __init__(self) -> None:
+        super().__init__(None)
         logger.debug("START", extra={"addinfo": "ウィンドウ生成"})
-        # Modelのインスタンス化0
+        # Modelのインスタンス化
         self.model = MazeMap()
         # Controllerのインスタンス化
         self.controller = GameController(self, self.model)
@@ -29,14 +27,15 @@ class App(Tk):
         self.controller.set_view(
             start_view=self.start_view,
             maze_view=self.maze_view,
-            main_view=self.main_view,
+            main_view=self.maze_view.maze_view,
             operation_view=self.operation_view,
-            log_view=self.log_view,
+            log_view=self.maze_view.log_view,
         )
         self.controller.maze_2d_controller.set_maze_view(self.maze_view)
         self.controller.maze_3d_controller.set_maze_view(self.maze_view)
-        self.controller.maze_controller.set_maze_view(self.maze_view)
+        # メニューバーの生成
         self.config(menu=self.set_menu())
+        # ウィンドウの詳細設定
         self.set_config()
 
     def set_config(self) -> None:
@@ -62,26 +61,13 @@ class App(Tk):
 
     def _set_frame(self) -> None:
         """フレームの設置"""
-        # 迷路画面の生成
-        self.canvas = MazeCanvas(self, self.controller, self.model)
-        self.main_view = Frame(self)
-        maze_index = Label(self.main_view, text="↑ → ↓ ← キーで操作、Ctrl+Cで操作方法の表示、ゴールに辿り着くとクリア")
-        self.maze_view = MazeView(self.main_view, self.controller, canvas=self.canvas)
-        self.option_view = OptionView(self.main_view, self.controller, self.controller.conf)
-        self.log_view = LogView(self.main_view, self.controller)
-
-        # 迷路画面の配置設定
-        maze_index.grid(row=0, column=0)
-        self.maze_view.grid(row=1, column=0, rowspan=2, sticky="nsew")
-        self.option_view.grid(row=1, column=1, sticky="nsew")
-        self.log_view.grid(row=2, column=1)
-
         # 各画面の生成
         # スタート画面
         self.start_view = StartView(self, self.controller)
         self.start_view.grid(row=0, column=0, sticky="nsew")
         # 迷路画面
-        self.main_view.grid(row=0, column=0, sticky="nsew")
+        self.maze_view = MazeView(self, self.controller, self.model)
+        self.maze_view.grid(row=0, column=0, sticky="nsew")
         # 操作方法確認画面
         self.operation_view = OperationView(self, self.controller)
         self.operation_view.grid(row=0, column=0, sticky="nsew")
@@ -120,8 +106,7 @@ class App(Tk):
             dim = 1
         else:
             dim = 0
-
-        self.controller.change_dimension(dim, val=True)
+        self.controller.change_dimension(dim)
 
     def win_close(self) -> None:
         """画面を閉じた時の挙動"""
@@ -132,6 +117,7 @@ class App(Tk):
         logger.debug("END", extra={"addinfo": "ログ取得終了"})
 
     def run(self) -> None:
+        """アプリの実行"""
         self.mainloop()
 
 

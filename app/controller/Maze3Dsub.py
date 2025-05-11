@@ -27,17 +27,15 @@ class Maze3Dto2DController(MazeController):
         self.controller = controller
         self.view = view
         self.model = model
+        self.dim = 1
         self.px, self.py = 1, 1
         self.frame_width = conf["3D"]["frame_width"]
         self.frame_height = conf["3D"]["frame_height"]
 
     # 迷路生成
-    def create_maze(self, flag: bool = False) -> Canvas:
+    def draw_maze(self) -> Canvas:
         # マップとプレイヤーを描画する
-        if not flag:
-            self.controller.model.set_default_position()
-
-        self.view.canvas.draw_maze(0)
+        self.view.canvas.draw_maze(self.dim)
         self.player_image = self.view.canvas.load_player(config.IMAGE_DIR + "/player.png")
         self.view.canvas.draw_player(self.player_image)
         return self.view.canvas

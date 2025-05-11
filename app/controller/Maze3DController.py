@@ -22,14 +22,15 @@ class Maze3DController(MazeController):
         self.app = app
         self.controller = app.controller
         self.model = model
+        self.dim = 1
         self.conf = conf
         self.px, self.py = 1, 1
         # self.subcanvas_controller = Maze3Dto2DController(controller, model, view, conf)
 
     # 迷路生成
-    def create_maze(self) -> None:
+    def draw_maze(self) -> None:
         # マップとプレイヤーを描画する
-        self.view.canvas.draw_maze(0)
+        self.view.canvas.draw_maze(self.dim)
         self.player_image = self.view.canvas.load_player(config.IMAGE_DIR + "/player.png")
         self.view.canvas.draw_player(self.player_image)
 
@@ -38,12 +39,12 @@ class Maze3DController(MazeController):
         self.map_data = self.model.create_maze(height, width, seed=seed)
 
     # キーイベント
-    def _move_player(self, px_current: int, py_current: int, direction: DIRECTION) -> tuple[int, int]:
+    def _move_player(self, px: int, py: int, direction: DIRECTION) -> tuple[int, int]:
         """指定された方向にプレイヤーを移動させる
 
         Args:
-            px_current (int): x座標
-            py_current (int): y座標
+            px (int): x座標
+            py (int): y座標
             direction (str): 向いている方角
 
         Returns:
@@ -51,15 +52,15 @@ class Maze3DController(MazeController):
         """
 
         if direction == DIRECTION.NORTH:
-            py_current -= 1
+            py -= 1
         elif direction == DIRECTION.SOUTH:
-            py_current += 1
+            py += 1
         elif direction == DIRECTION.EAST:
-            px_current += 1
+            px += 1
         elif direction == DIRECTION.WEST:
-            px_current -= 1
+            px -= 1
 
-        return px_current, py_current
+        return px, py
 
     def _get_new_direction(self, current_direction: DIRECTION, keysym: str) -> DIRECTION:
         """キー入力に基づいて新しい方向を向く
@@ -102,8 +103,9 @@ class Maze3DController(MazeController):
             # 移動できる場合
             if check == 0:
                 self.model.move_player(px_current, py_current)
-                self.maze_view.canvas.draw_player(self.player_image)
-                self.controller.maze_controller.getLoc(px_current, px_current)
+                self.view.canvas.delete("all")
+                self.view.canvas.draw_maze_3d()
+                self.controller.maze_controller.getLoc(px_current, py_current)
                 logger.debug("MOVE", extra={"addinfo": f"player={px_current},{py_current}"})
 
             # 移動できない場合
@@ -112,7 +114,7 @@ class Maze3DController(MazeController):
 
             # ゴールした場合
             elif check == 2:
-                # self.parent.parent.parent.raise_frame(self.parent.parent.parent.goal_frame)
+                self.controller.raise_frame(self.app.goal_frame)
                 self.controller.writeToLog("ゴール!")
                 logger.debug("GOAL", extra={"addinfo": "ゴール"})
 
@@ -120,3 +122,5 @@ class Maze3DController(MazeController):
         elif key_direction in ["Down", "Left", "Right"]:
             new_direction = self._get_new_direction(current_direction, key_direction)
             self.model.set_direction(new_direction)
+            self.view.canvas.delete("all")
+            self.view.canvas.draw_maze_3d()

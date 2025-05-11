@@ -37,7 +37,7 @@ class GameController:
         # コントローラの作成
         self.maze_2d_controller = Maze2DController(self.app, self.model, self.conf)
         self.maze_3d_controller = Maze3DController(self.app, self.model, self.conf)
-        self.bind_id_dict = self.set_key_bind(self.app, self.maze_2d_controller)
+        self.set_key_bind(self.app, self.maze_2d_controller)
         self._set_controller(0)
 
     def set_view(self, start_view: StartView, maze_view: MazeView, main_view: Frame, operation_view: OperationView, log_view: LogView) -> None:
@@ -64,13 +64,14 @@ class GameController:
         self.raise_frame(self.main_view)
 
     # 2D, 3D の切替
-    def change_dimension(self, dim: int, val: bool = False) -> None:
+    def change_dimension(self, dim: int) -> None:
         """
         2D, 3D の切替を行う関数
         """
         logger.debug("SET", extra={"addinfo": f"{dim + 2}D"})
         # 各ラジオボタンと変数を共有
         self.start_view.set_radio_value(dim)
+        self.maze_controller.set_dimension(dim)
         # 切替
         self.maze_controller.changePage(dim)
         # コントローラーの切替
@@ -92,18 +93,17 @@ class GameController:
             self.maze_controller = self.maze_3d_controller
 
     # key バインド
-    def set_key_bind(self, target: Tk, maze: MazeController) -> dict[str, str]:
-        bind_id_L = target.bind("<KeyPress-Left>", maze.key_event_handler)
-        bind_id_U = target.bind("<KeyPress-Up>", maze.key_event_handler, "+")
-        bind_id_R = target.bind("<KeyPress-Right>", maze.key_event_handler, "+")
-        bind_id_D = target.bind("<KeyPress-Down>", maze.key_event_handler, "+")
-        return {"L": bind_id_L, "U": bind_id_U, "R": bind_id_R, "D": bind_id_D}
+    def set_key_bind(self, target: Tk, maze: MazeController) -> None:
+        target.bind("<KeyPress-Left>", maze.key_event_handler)
+        target.bind("<KeyPress-Up>", maze.key_event_handler, "+")
+        target.bind("<KeyPress-Right>", maze.key_event_handler, "+")
+        target.bind("<KeyPress-Down>", maze.key_event_handler, "+")
 
     def unset_key_bind(self, target: Tk) -> None:
-        target.unbind("<KeyPress-Left>", self.bind_id_dict["L"])
-        target.unbind("<KeyPress-Up>", self.bind_id_dict["U"])
-        target.unbind("<KeyPress-Right>", self.bind_id_dict["R"])
-        target.unbind("<KeyPress-Down>", self.bind_id_dict["D"])
+        target.unbind("<KeyPress-Left>")
+        target.unbind("<KeyPress-Up>")
+        target.unbind("<KeyPress-Right>")
+        target.unbind("<KeyPress-Down>")
 
     # 設定ファイル
     def get_setting(self) -> dict:
