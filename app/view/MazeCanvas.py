@@ -19,13 +19,19 @@ class MazeCanvas(Canvas):
         self.controller = controller
         self.model = model
         self.cell_size = 20
-        self.width = len(maze[0]) * self.cell_size
-        self.height = len(maze) * self.cell_size
-        self.mode = "2D"
+
+    def calc_canvas_width(self):
+        self.width = len(self.model.map_data[0]) * self.cell_size
+        self.height = len(self.model.map_data) * self.cell_size
 
     # プレイヤー描画
     def draw_player(self, player_image: ImageTk.PhotoImage) -> None:
-        self.create_image(800 - self.model.tile_size * 2 + 10, 600 - self.model.tile_size * 2 + 10, image=player_image, anchor="nw")
+        self.create_image(800 - self.tile_size_x * 2 + 10, 600 - self.tile_size_y * 2 + 10, image=player_image, anchor="nw")
+
+    def maze_config(self):
+        self.maze_width, self.maze_height = self.model.get_maze_size()
+        self.tile_size_x = self.width / (self.maze_width * 2 + 1)
+        self.tile_size_y = self.height / (self.maze_height * 2 + 1)
 
     # プレイヤー生成
     def load_player(self, image_file_name: str) -> ImageTk.PhotoImage:
@@ -40,35 +46,37 @@ class MazeCanvas(Canvas):
     def draw_map(self) -> None:
         # マップとプレイヤーを描画する
         self.delete("all")
-        self.draw_maze()
-        if self.mode == "3D":
-            self.controller.maze_view.canvas.draw_map()
+        self.draw_maze(0)
 
     def draw_map_event(self) -> None:
         # マップとプレイヤーを描画する
         self.delete("all")
         self.direction = self.model.set_direction(self.model._default_direction())
-        self.draw_maze()
-        if self.mode == "3D":
-            self.controller.maze_view.canvas.draw_map()
+        self.draw_maze(0)
+
+    # 迷路解読
+    def draw_maze(self, dim):
+        if dim == 0:
+            self.draw_maze_2d()
+        else:
+            self.draw_maze_3d()
+            self.draw_maze_3dto2d()
 
     # 2D
-    # 迷路解読
-    @overload
-    def draw_maze(self) -> None:
+    def draw_maze_2d(self) -> None:
         # 左上から右下へと描画
         # 迷路の行数
-        self.model._maze_config()
+        self.maze_config()
 
         rows = len(self.model.map_data)
         # 迷路の列数
         cols = len(self.model.map_data[0])
         for y in range(rows):
-            y1 = y * self.model.tile_size_y
-            y2 = y1 + self.model.tile_size_y
+            y1 = y * self.tile_size_y
+            y2 = y1 + self.tile_size_y
             for x in range(cols):
-                x1 = x * self.model.tile_size_x
-                x2 = x1 + self.model.tile_size_x
+                x1 = x * self.tile_size_x
+                x2 = x1 + self.tile_size_x
                 # 該当場所の値を得る
                 p = self.model.map_data[y][x]
                 # 値に応じた色を決定する
@@ -86,9 +94,7 @@ class MazeCanvas(Canvas):
                 self.create_rectangle(x1, y1, x2, y2, fill=color, outline=color, width=2)
 
     # 3D用2D
-    # 迷路解読
-    @overload
-    def draw_maze(self) -> None:
+    def draw_maze_3dto2d(self) -> None:
         # 左上から右下へと描画
         # 迷路の行数
         #  |0|1|2|
@@ -98,11 +104,11 @@ class MazeCanvas(Canvas):
         map_viz = self.model.get_map_viz()
 
         for y in range(4):
-            y1 = y * self.model.tile_size + (600 - self.model.tile_size * 5)
-            y2 = y1 + self.model.tile_size
+            y1 = y * self.tile_size_y + (600 - self.tile_size_y * 5)
+            y2 = y1 + self.tile_size_y
             for x in range(3):
-                x1 = x * self.model.tile_size + 800 - self.model.tile_size * 3
-                x2 = x1 + self.model.tile_size
+                x1 = x * self.tile_size_x + 800 - self.tile_size_x * 3
+                x2 = x1 + self.tile_size_x
                 # 該当場所の値を得る
                 p = map_viz[y * 3 + x]
                 # 値に応じた色を決定する
@@ -120,9 +126,7 @@ class MazeCanvas(Canvas):
                 self.create_rectangle(x1, y1, x2, y2, fill=color, outline="black", width=2)
 
     # 3D
-    # Canvas に描画
-    @overload
-    def draw_maze(self) -> None:
+    def draw_maze_3d(self) -> None:
         map_viz = self.model.get_map_viz()
         self._wall_row_first(map_viz)
 

@@ -1,14 +1,10 @@
 from __future__ import annotations
 
-from logging import getLogger
 from tkinter import Button, Frame, IntVar, Label, LabelFrame, Radiobutton, Spinbox, Tk
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.controller.GameController import GameController
-
-
-logger = getLogger("maze_root").getChild("START")
 
 
 class StartView(Frame):
@@ -21,8 +17,9 @@ class StartView(Frame):
         self.set_frame()
 
     def set_frame(self) -> None:
+        """フレームの作成"""
         name_label = Label(self, text="迷路ゲーム", font=("HGS行書体", 50), width=30, height=3)
-        button_frame = self.set_button()
+        button_frame = self.create_button()
         setting_frame = self.setting_frame()
         radio_frame = self.radio_frame()
 
@@ -31,7 +28,12 @@ class StartView(Frame):
         radio_frame.pack()
         button_frame.pack()
 
-    def set_button(self) -> Frame:
+    def create_button(self) -> Frame:
+        """ボタンの作成
+
+        Returns:
+            Frame: _description_
+        """
         frame = Frame(self, height=15, width=30)
 
         start_button = Button(
@@ -82,7 +84,7 @@ class StartView(Frame):
         self.radio_value = IntVar()
         radio_2D = Radiobutton(frame, text="2D", command=lambda: self.controller.change_dimension(0), variable=self.radio_value, value=0, width=self.widget_width, height=2)
         radio_3D = Radiobutton(frame, text="3D", command=lambda: self.controller.change_dimension(1), variable=self.radio_value, value=1, height=2)
-        self.radio_value.set(self.conf["dim"])
+        self.radio_value.set(0)
 
         radio_2D.pack()
         radio_3D.pack()

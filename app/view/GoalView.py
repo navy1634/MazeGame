@@ -1,13 +1,10 @@
 from __future__ import annotations
 
-from logging import getLogger
 from tkinter import Button, Frame, Label, Tk
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.controller.GameController import GameController
-
-logger = getLogger("maze_root").getChild("Goal")
 
 
 class GoalView(Frame):
@@ -24,8 +21,8 @@ class GoalView(Frame):
 
     def set_button(self) -> Frame:
         frame = Frame(self)
-        Button(frame, text="新しく開始", width=self.widget_width, height=self.widget_height, command=self.controller.new_game, font=("HGS行書体", 15)).grid(row=0, column=0)
-        Button(frame, text="やり直す", width=self.widget_width, height=self.widget_height, command=self.controller.restart, font=("HGS行書体", 15)).grid(row=0, column=1)
+        Button(frame, text="新しく開始", width=self.widget_width, height=self.widget_height, command=self.controller.maze_controller.reset, font=("HGS行書体", 15)).grid(row=0, column=0)
+        Button(frame, text="やり直す", width=self.widget_width, height=self.widget_height, command=self.controller.maze_controller.restart, font=("HGS行書体", 15)).grid(row=0, column=1)
         Button(frame, text="スタート画面へ", width=self.widget_width, height=self.widget_height, command=self.start_frame, font=("HGS行書体", 15)).grid(row=1, column=0)
         Button(frame, text="終了", width=self.widget_width, height=self.widget_height, command=self.controller.app.win_close, font=("HGS行書体", 15)).grid(row=1, column=1)
         return frame

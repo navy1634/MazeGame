@@ -1,14 +1,10 @@
 from __future__ import annotations
 
-from logging import getLogger
 from tkinter import Frame, Label, LabelFrame, Tk
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.controller.GameController import GameController
-
-
-logger = getLogger("maze_root").getChild("Goal")
 
 
 class OperationView(Frame):
