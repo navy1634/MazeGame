@@ -2,9 +2,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from datetime import datetime, timezone
 from logging import getLogger
-from tkinter import Frame
 from typing import TYPE_CHECKING
 
 from app.config import config
@@ -12,11 +10,7 @@ from app.model.MazeMap import MazeMap
 
 if TYPE_CHECKING:
     from app.main import App
-    from app.view.LogView import LogView
-    from app.view.MazeCanvas import MazeCanvas
     from app.view.MazeView import MazeView
-    from app.view.OperationView import OperationView
-    from app.view.StartView import StartView
 
 logger = getLogger("maze_root").getChild(__name__)
 

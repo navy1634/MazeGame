@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from logging import getLogger
 from tkinter import Canvas, Frame, Tk
-from typing import TYPE_CHECKING, overload
+from typing import TYPE_CHECKING
 
 from PIL import Image, ImageTk
 
-from app.config.type import DIRECTION, Maze3DColor
+from app.config.type import Maze3DColor
 from app.model.MazeMap import MazeMap
 
 if TYPE_CHECKING:
