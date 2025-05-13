@@ -1,17 +1,10 @@
-from __future__ import annotations
-
 from tkinter import Frame, Label, LabelFrame, Tk
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from app.controller.GameController import GameController
 
 
 class OperationView(Frame):
-    def __init__(self, parent: Tk | Frame, controller: GameController) -> None:
+    def __init__(self, parent: Tk | Frame) -> None:
         super().__init__(parent)
         self.parent = parent
-        self.controller = controller
         self.widget_width = 30
         self.widget_height = 3
         self.set_frame()

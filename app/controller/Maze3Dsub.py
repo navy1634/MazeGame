@@ -35,9 +35,8 @@ class Maze3Dto2DController(MazeController):
     # 迷路生成
     def draw_maze(self) -> Canvas:
         # マップとプレイヤーを描画する
-        self.view.canvas.draw_maze(self.dim)
-        self.player_image = self.view.canvas.load_player(config.IMAGE_DIR + "/player.png")
-        self.view.canvas.draw_player(self.player_image)
+        self.view.canvas.draw_maze()
+        self.view.canvas.draw_player(self.maze_view.player_image)
         return self.view.canvas
 
     def get_map_viz(self) -> list:
@@ -46,8 +45,8 @@ class Maze3Dto2DController(MazeController):
             map_x = self.model.px + config.POS_X[self.model.direction][i]
             map_y = self.model.py + config.POS_Y[self.model.direction][i]
 
-            if 0 < map_x < len(self.model.map_data[0]) and 0 < map_y < len(self.model.map_data):
-                data = self.model.map_data[map_y][map_x]
+            if 0 < map_x < len(self.map_data[0]) and 0 < map_y < len(self.map_data):
+                data = self.map_data[map_y][map_x]
             else:
                 data = 0
             map_viz.append(data)

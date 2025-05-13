@@ -20,7 +20,6 @@ class MazeController:
         self.app = app
         self.model = model
         self.dim = 0
-        self.player_image = self.app.maze_view.canvas.load_player(config.IMAGE_DIR + "/player.png")
 
     def set_model(self, model: MazeMap) -> None:
         """2D <-> 3D 切替時にマップを共有する
@@ -37,25 +36,42 @@ class MazeController:
     def set_dimension(self, dim: int) -> None:
         self.dim = dim
 
-    # 迷路生成
-    def set_maze(self) -> None:
-        self.model.set_seed(self.model.seed)
-        self.load_maze(seed=self.model.seed)  # 迷路の読み込み
-        self.view.canvas.calc_canvas_width()
-        self.view.canvas.maze_config()
-        self.draw_maze()  # 迷路描画
-        self.app.controller.unset_key_bind(self.app)
-        self.app.controller.set_key_bind(self.app, self)
+    def get_dimension(self) -> int:
+        return self.dim
+
+    def get_player_position(self) -> tuple[int, int]:
+        """プレイヤーの位置を取得する
+
+        Returns:
+            tuple[int, int]: プレイヤーの位置
+        """
+        return self.model.get_player_position()
 
     def load_maze(self, seed: int | None = None) -> None:
+        """迷路の読み込み
+
+        Args:
+            seed (int | None, optional): _description_. Defaults to None.
+        """
         height, width = self.app.start_view.get_size()
         self.map_data = self.model.create_maze(height, width, seed=seed)
 
-    def draw_maze(self):
-        # マップとプレイヤーを描画する
-        self.maze_view.canvas.draw_maze(self.dim)
-        self.maze_view.canvas.draw_player(self.player_image)
-        return self.maze_view.canvas
+    # 迷路表示
+    def draw_map(self) -> None:
+        """
+        マップとプレイヤーを描画する
+        """
+        self.maze_view.canvas.draw_maze()
+        self.maze_view.canvas.draw_player(player_image=self.maze_view.player_image)
+
+    # 迷路生成
+    def set_maze(self) -> None:
+        self.model.set_seed(self.model.seed)
+        self.load_maze(seed=self.model.seed)
+        self.view.canvas.maze_config()
+        self.draw_map()  # 迷路描画
+        self.app.controller.unset_key_bind(self.app)
+        self.app.controller.set_key_bind(self.app, self)
 
     def get_map_viz(self) -> list:
         map_viz = []
@@ -63,18 +79,12 @@ class MazeController:
             map_x = self.model.px + config.POS_X[self.model.direction][i]
             map_y = self.model.py + config.POS_Y[self.model.direction][i]
 
-            if 0 < map_x < len(self.model.map_data[0]) and 0 < map_y < len(self.model.map_data):
-                data = self.model.map_data[map_y][map_x]
+            if 0 < map_x < len(self.map_data[0]) and 0 < map_y < len(self.map_data):
+                data = self.map_data[map_y][map_x]
             else:
                 data = 0
             map_viz.append(data)
         return map_viz
-
-    # 迷路表示
-    def draw_map(self) -> None:
-        # マップとプレイヤーを描画する
-        self.maze_view.canvas.draw_maze(self.dim)
-        self.maze_view.canvas.draw_player(player_image=self.player_image)
 
     # プレイヤー移動
     def _move_player(self, px: int, py: int, direction: str) -> tuple[int, int]:
@@ -103,28 +113,27 @@ class MazeController:
         """迷路のリセットを行う関数"""
         logger.debug("RESET", extra={"addinfo": "位置リセット"})
         self.model.set_default_position()
-        self.maze_view.canvas.draw_maze(self.dim)
+        self.draw_map()
         self.getLoc(1, 1)
 
     def restart(self) -> None:
         """迷路のリスタートを行うボタン用の関数"""
         logger.debug("RESTART", extra={"addinfo": "迷路再生成"})
-        h, w = self.app.start_view.get_size()
-        self.model.create_maze(h, w)
+        self.load_maze(seed=self.model.set_seed(None))  # 迷路の読み込み
         self.model.set_default_position()
-        self.maze_view.canvas.draw_maze(self.dim)
+        self.maze_view.canvas.delete("all")
+        self.draw_map()
         self.getLoc(1, 1)
         self.app.controller.writeToLog("リスタート")
-        self.app.controller.raise_frame(self.maze_view)
 
     def solve(self) -> None:
         """解答生成を行う関数"""
         logger.debug("SOLVE", extra={"addinfo": "迷路解答表示"})
         self.map_data = self.model.solve_maze()
-        self.maze_view.canvas.draw_maze(self.dim)
+        self.draw_map()
         self.app.controller.writeToLog("解答表示")
 
-    def changePage(self, dim: int) -> None:
+    def changePage(self) -> None:
         """
         画面遷移用の関数
         """
@@ -133,8 +142,8 @@ class MazeController:
         self.set_maze()
         # ログ処理
         self.getLoc(self.model.px, self.model.py)
-        self.app.controller.writeToLog(f"迷路開始 ({dim + 2}D)")
-        logger.debug("GENERATE", extra={"addinfo": f"迷路生成 ({dim + 2}D)"})
+        self.app.controller.writeToLog(f"迷路開始 ({self.dim + 2}D)")
+        logger.debug("GENERATE", extra={"addinfo": f"迷路生成 ({self.dim + 2}D)"})
 
     def getLoc(self, px: int, py: int) -> None:
         """移動時のログを吐く関数

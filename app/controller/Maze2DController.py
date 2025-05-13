@@ -27,9 +27,8 @@ class Maze2DController(MazeController):
     # 迷路生成
     def draw_maze(self) -> Canvas:
         # マップとプレイヤーを描画する
-        self.view.canvas.draw_maze(self.dim)
-        self.player_image = self.view.canvas.load_player(config.IMAGE_DIR + "/player.png")
-        self.view.canvas.draw_player(self.player_image)
+        self.view.canvas.draw_maze()
+        self.view.canvas.draw_player(self.maze_view.player_image)
         return self.view.canvas
 
     # キーイベント
@@ -44,7 +43,7 @@ class Maze2DController(MazeController):
         if check == 0:
             self.model.move_player(px=px_current, py=py_current)
             self.view.canvas.delete(self.view.canvas.player)
-            self.maze_view.canvas.draw_player(self.player_image)
+            self.maze_view.canvas.draw_player(self.maze_view.player_image)
             self.controller.maze_controller.getLoc(px=px_current, py=py_current)
             logger.debug("MOVE", extra={"addinfo": "player={0},{1}".format(px_current, py_current)})
 

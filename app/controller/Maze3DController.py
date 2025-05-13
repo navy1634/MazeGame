@@ -24,19 +24,15 @@ class Maze3DController(MazeController):
         self.model = model
         self.dim = 1
         self.conf = conf
-        self.px, self.py = 1, 1
         # self.subcanvas_controller = Maze3Dto2DController(controller, model, view, conf)
 
-    # 迷路生成
-    def draw_maze(self) -> None:
-        # マップとプレイヤーを描画する
-        self.view.canvas.draw_maze(self.dim)
-        self.player_image = self.view.canvas.load_player(config.IMAGE_DIR + "/player.png")
-        self.view.canvas.draw_player(self.player_image)
+    def get_maze_mini_map(self) -> list[int]:
+        """迷路のミニマップを取得する
 
-    def load_maze(self, seed: int | None = None) -> None:
-        height, width = self.model.get_maze_size()
-        self.map_data = self.model.create_maze(height, width, seed=seed)
+        Returns:
+            list[list[int]]: 迷路のミニマップ
+        """
+        return self.model.get_map_viz()
 
     # キーイベント
     def _move_player(self, px: int, py: int, direction: DIRECTION) -> tuple[int, int]:

@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 class OptionView(Frame):
     logger = getLogger("maze_root").getChild(__name__)
 
-    def __init__(self, parent: Tk | Frame, controller: GameController, conf) -> None:
+    def __init__(self, parent: Tk | Frame, controller: GameController, conf: dict) -> None:
         super().__init__(parent)
         self.parent = parent
         self.controller = controller

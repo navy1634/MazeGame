@@ -66,10 +66,10 @@ class App(Tk):
         self.start_view = StartView(self, self.controller)
         self.start_view.grid(row=0, column=0, sticky="nsew")
         # 迷路画面
-        self.maze_view = MazeView(self, self.controller, self.model)
+        self.maze_view = MazeView(self, self.controller)
         self.maze_view.grid(row=0, column=0, sticky="nsew")
         # 操作方法確認画面
-        self.operation_view = OperationView(self, self.controller)
+        self.operation_view = OperationView(self)
         self.operation_view.grid(row=0, column=0, sticky="nsew")
         # ゴール画面
         self.goal_frame = GoalView(self, self.controller)

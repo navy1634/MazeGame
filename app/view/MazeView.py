@@ -3,21 +3,20 @@ from __future__ import annotations
 from tkinter import Frame, Label, Tk
 from typing import TYPE_CHECKING
 
+from app.config import config
 from app.view.LogView import LogView
 from app.view.MazeCanvas import MazeCanvas
 from app.view.OptionView import OptionView
 
 if TYPE_CHECKING:
     from app.controller.GameController import GameController
-    from app.model.MazeMap import MazeMap
 
 
 class MazeView(Frame):
-    def __init__(self, parent: Tk | Frame, controller: GameController, model: MazeMap) -> None:
+    def __init__(self, parent: Tk | Frame, controller: GameController) -> None:
         super().__init__(parent)
         self.parent = parent
         self.controller = controller
-        self.model = model
         self.px, self.py = 1, 1
         self.seed = 0
 
@@ -26,7 +25,8 @@ class MazeView(Frame):
         self.option_view = OptionView(self, self.controller, self.controller.conf)
         self.log_view = LogView(self, self.controller)
         self.maze_view = Frame(self)
-        self.canvas = MazeCanvas(self.maze_view, self.controller, self.model)
+        self.canvas = MazeCanvas(self.maze_view, self.controller)
+        self.player_image = self.canvas.load_player(config.IMAGE_DIR + "/player.png")
 
         # 迷路画面の配置設定
         maze_index.grid(row=0, column=0)

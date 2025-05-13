@@ -6,18 +6,17 @@ from typing import TYPE_CHECKING
 from PIL import Image, ImageTk
 
 from app.config.type import Maze3DColor
-from app.model.MazeMap import MazeMap
 
 if TYPE_CHECKING:
     from app.controller.GameController import GameController
 
 
 class MazeCanvas(Canvas):
-    def __init__(self, parent: Tk | Frame, controller: GameController, model: MazeMap) -> None:
+    def __init__(self, parent: Tk | Frame, controller: GameController) -> None:
         super().__init__(parent, width=800, height=600, background="#020202")
         self.controller = controller
-        self.model = model
-        self.cell_size = 20
+        self.width = 800
+        self.height = 600
 
     # プレイヤー生成
     def load_player(self, image_file_name: str) -> ImageTk.PhotoImage:
@@ -30,33 +29,30 @@ class MazeCanvas(Canvas):
 
     # プレイヤー描画
     def draw_player(self, player_image: ImageTk.PhotoImage) -> None:
-        self.player = self.create_image(800 - self.tile_size_x * 2 + 10, 600 - self.tile_size_y * 2 + 10, image=player_image, anchor="nw")
+        x, y = self.controller.maze_controller.get_player_position()
+        self.player = self.create_image(x * self.tile_size_x, y * self.tile_size_y, image=player_image, anchor="nw")
 
     # タイルサイズの計算
-    def calc_canvas_width(self):
-        self.width = len(self.model.map_data[0]) * self.cell_size
-        self.height = len(self.model.map_data) * self.cell_size
-
     def maze_config(self):
-        self.maze_width, self.maze_height = self.model.get_maze_size()
-        self.tile_size_x = self.width / (self.maze_width * 2 + 1)
-        self.tile_size_y = self.height / (self.maze_height * 2 + 1)
+        self.maze_width, self.maze_height = self.controller.model.get_maze_size()
+        self.tile_size_x = self.width / self.maze_width
+        self.tile_size_y = self.height / self.maze_height
 
     # 迷路表示
     def draw_map(self) -> None:
         # マップとプレイヤーを描画する
         self.delete("all")
-        self.draw_maze(self.controller.maze_controller.dim)
+        self.draw_maze()
 
     def draw_map_event(self) -> None:
         # マップとプレイヤーを描画する
         self.delete("all")
-        self.direction = self.model.set_direction(self.model._default_direction())
-        self.draw_maze(self.controller.maze_controller.dim)
+        self.direction = self.controller.model.set_direction(self.controller.model._default_direction())
+        self.draw_maze()
 
     # 迷路解読
-    def draw_maze(self, dim):
-        if dim == 0:
+    def draw_maze(self):
+        if self.controller.maze_controller.dim == 0:
             self.draw_maze_2d()
         else:
             self.draw_maze_3d()
@@ -67,19 +63,15 @@ class MazeCanvas(Canvas):
     def draw_maze_2d(self) -> None:
         # 左上から右下へと描画
         # 迷路の行数
-        self.maze_config()
-
-        rows = len(self.model.map_data)
         # 迷路の列数
-        cols = len(self.model.map_data[0])
-        for y in range(rows):
+        for y in range(self.maze_height):
             y1 = y * self.tile_size_y
             y2 = y1 + self.tile_size_y
-            for x in range(cols):
+            for x in range(self.maze_width):
                 x1 = x * self.tile_size_x
                 x2 = x1 + self.tile_size_x
                 # 該当場所の値を得る
-                p = self.model.map_data[y][x]
+                p = self.controller.maze_controller.map_data[y][x]
                 # 値に応じた色を決定する
                 if p == 0:
                     color = "#404040"
@@ -102,7 +94,7 @@ class MazeCanvas(Canvas):
         #  |3|4|5|
         #  |6|7|8|
         #  |9|A|B|
-        map_viz = self.model.get_map_viz()
+        map_viz = self.controller.maze_3d_controller.get_maze_mini_map()
 
         for y in range(4):
             y1 = y * self.tile_size_y + (600 - self.tile_size_y * 5)
@@ -128,7 +120,7 @@ class MazeCanvas(Canvas):
 
     # 3D
     def draw_maze_3d(self) -> None:
-        map_viz = self.model.get_map_viz()
+        map_viz = self.controller.maze_3d_controller.get_maze_mini_map()
         self._wall_row_first(map_viz)
 
         self.create_line(100, 470, 700, 470, fill=Maze3DColor.LAYER1)

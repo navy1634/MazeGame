@@ -14,10 +14,7 @@ class StartView(Frame):
         self.controller = controller
         self.widget_width = 30
         self.widget_height = 3
-        self.set_frame()
 
-    def set_frame(self) -> None:
-        """フレームの作成"""
         name_label = Label(self, text="迷路ゲーム", font=("HGS行書体", 50), width=30, height=3)
         button_frame = self.create_button()
         setting_frame = self.setting_frame()
@@ -93,8 +90,8 @@ class StartView(Frame):
     def set_radio_value(self, value: int) -> None:
         self.radio_value.set(value)
 
-    def get_size(self) -> tuple[int, int]:
-        return self.size_h.get(), self.size_w.get()
-
     def get_radio_value(self) -> int:
         return self.radio_value.get()
+
+    def get_size(self) -> tuple[int, int]:
+        return self.size_h.get(), self.size_w.get()

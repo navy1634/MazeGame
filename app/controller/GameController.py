@@ -60,7 +60,7 @@ class GameController:
         """
         迷路生成し、画面を表示
         """
-        self.maze_controller.changePage(self.start_view.radio_value.get())
+        self.maze_controller.changePage()
         self.raise_frame(self.main_view)
 
     # 2D, 3D の切替
@@ -73,7 +73,7 @@ class GameController:
         self.start_view.set_radio_value(dim)
         self.maze_controller.set_dimension(dim)
         # 切替
-        self.maze_controller.changePage(dim)
+        self.maze_controller.changePage()
         # コントローラーの切替
         self._set_controller(dim)
         # キーバインドの解除
