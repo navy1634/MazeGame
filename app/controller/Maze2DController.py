@@ -16,11 +16,8 @@ logger = getLogger("maze_root").getChild(__name__)
 
 class Maze2DController(MazeController):
     def __init__(self, app: App, model: MazeMap, conf: dict) -> None:
-        self.app = app
+        super().__init__(app, model, conf)
         self.controller = app.controller
-        self.model = model
-        self.dim = 0
-        self.px, self.py = 1, 1
         self.frame_width = conf["3D"]["FrameWidth"]
         self.frame_height = conf["3D"]["FrameHeight"]
 

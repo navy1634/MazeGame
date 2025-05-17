@@ -42,8 +42,8 @@ class Maze3Dto2DController(MazeController):
     def get_map_viz(self) -> list:
         map_viz = []
         for i in range(12):
-            map_x = self.model.px + config.POS_X[self.model.direction][i]
-            map_y = self.model.py + config.POS_Y[self.model.direction][i]
+            map_x = self.model.loc.px + config.POS_X[self.model.direction][i]
+            map_y = self.model.loc.py + config.POS_Y[self.model.direction][i]
 
             if 0 < map_x < len(self.map_data[0]) and 0 < map_y < len(self.map_data):
                 data = self.map_data[map_y][map_x]

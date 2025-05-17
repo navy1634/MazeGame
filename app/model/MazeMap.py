@@ -9,11 +9,12 @@ from mazelib.solve.ShortestPaths import ShortestPaths
 
 from app.config import config
 from app.config.type import DIRECTION
+from app.model.model import Loc
 
 
 class MazeMap(Maze):
     def __init__(self) -> None:
-        self.px, self.py = 1, 1  # プレイヤーの初期位置
+        self.loc = Loc()  # プレイヤーの初期位置
         self.seed: int | None = None
         self.direction = DIRECTION.NORTH  # プレイヤーの初期方向
 
@@ -47,7 +48,7 @@ class MazeMap(Maze):
         self.map_data = np.vectorize(int)(mz_str_list)
         return self.map_data
 
-    def get_maze_size(self):
+    def get_maze_size(self) -> tuple[int, int]:
         """
         迷路のサイズを取得する
         """
@@ -55,8 +56,9 @@ class MazeMap(Maze):
 
     # 初期設定
     def set_default_position(self) -> None:
-        self.px = 1
-        self.py = 1
+        self.loc.px = 1
+        self.loc.py = 1
+        self._default_direction()
 
     def set_seed(self, seed: int | None = None) -> None:
         """乱数のシードをセットする関数
@@ -73,14 +75,14 @@ class MazeMap(Maze):
         """
         プレイヤーの位置を取得する
         """
-        return self.px, self.py
+        return self.loc.px, self.loc.py
 
     def move_player(self, px: int, py: int) -> None:
         """
         プレイヤーの位置情報の更新
         """
-        self.px = px
-        self.py = py
+        self.loc.px = px
+        self.loc.py = py
 
     def check_move(self, px: int, py: int) -> int:
         """移動判定
@@ -99,8 +101,8 @@ class MazeMap(Maze):
         if py < 0 or py >= len(self.map_data):
             return 1
 
-        mv = self.map_data[px][py]
         # 移動先が壁なら1を返す
+        mv = self.map_data[py][px]
         if mv == 0:
             return 1
         # 移動先がゴールなら2を返す
@@ -153,8 +155,8 @@ class MazeMap(Maze):
         """
         map_viz = []
         for i in range(len(config.POS_X[0])):
-            map_x = self.px + config.POS_X[self.direction][i]
-            map_y = self.py + config.POS_Y[self.direction][i]
+            map_x = self.loc.px + config.POS_X[self.direction][i]
+            map_y = self.loc.py + config.POS_Y[self.direction][i]
 
             if 0 < map_x < len(self.map_data[0]) and 0 < map_y < len(self.map_data):
                 data = self.map_data[map_y][map_x]

@@ -17,11 +17,19 @@ class GoalView(Frame):
 
         Label(self, text="GAME CLEAR !!!", font=("HGS行書体", 100), width=self.widget_width, height=self.widget_height).pack()
         frame = Frame(self)
-        Button(frame, text="新しく開始", width=self.widget_width, height=self.widget_height, command=self.controller.maze_controller.reset, font=("HGS行書体", 15)).grid(row=0, column=0)
-        Button(frame, text="やり直す", width=self.widget_width, height=self.widget_height, command=self.controller.maze_controller.restart, font=("HGS行書体", 15)).grid(row=0, column=1)
-        Button(frame, text="スタート画面へ", width=self.widget_width, height=self.widget_height, command=self.start_frame, font=("HGS行書体", 15)).grid(row=1, column=0)
+        Button(frame, text="新しく開始", width=self.widget_width, height=self.widget_height, command=self.raise_maze_restart, font=("HGS行書体", 15)).grid(row=0, column=0)
+        Button(frame, text="やり直す", width=self.widget_width, height=self.widget_height, command=self.raise_maze_reset, font=("HGS行書体", 15)).grid(row=0, column=1)
+        Button(frame, text="スタート画面へ", width=self.widget_width, height=self.widget_height, command=self.raise_start_frame, font=("HGS行書体", 15)).grid(row=1, column=0)
         Button(frame, text="終了", width=self.widget_width, height=self.widget_height, command=self.controller.app.win_close, font=("HGS行書体", 15)).grid(row=1, column=1)
         frame.pack()
 
-    def start_frame(self) -> None:
+    def raise_start_frame(self) -> None:
         self.controller.raise_frame(self.controller.start_view)
+
+    def raise_maze_reset(self) -> None:
+        self.controller.maze_controller.reset()
+        self.controller.raise_frame(self.controller.maze_view)
+
+    def raise_maze_restart(self) -> None:
+        self.controller.maze_controller.restart()
+        self.controller.raise_frame(self.controller.maze_view)

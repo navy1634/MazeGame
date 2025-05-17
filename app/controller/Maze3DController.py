@@ -19,11 +19,8 @@ logger = getLogger("maze_root").getChild(__name__)
 
 class Maze3DController(MazeController):
     def __init__(self, app: App, model: MazeMap, conf: dict) -> None:
-        self.app = app
+        super().__init__(app, model, conf)
         self.controller = app.controller
-        self.model = model
-        self.dim = 1
-        self.conf = conf
         # self.subcanvas_controller = Maze3Dto2DController(controller, model, view, conf)
 
     def get_maze_mini_map(self) -> list[int]:

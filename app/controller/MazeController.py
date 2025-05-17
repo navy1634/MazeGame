@@ -19,6 +19,8 @@ class MazeController:
     def __init__(self, app: App, model: MazeMap, conf) -> None:
         self.app = app
         self.model = model
+        self.conf = conf
+        self.px, self.py = 1, 1
         self.dim = 0
 
     def set_model(self, model: MazeMap) -> None:
@@ -76,8 +78,8 @@ class MazeController:
     def get_map_viz(self) -> list:
         map_viz = []
         for i in range(12):
-            map_x = self.model.px + config.POS_X[self.model.direction][i]
-            map_y = self.model.py + config.POS_Y[self.model.direction][i]
+            map_x = self.model.loc.px + config.POS_X[self.model.direction][i]
+            map_y = self.model.loc.py + config.POS_Y[self.model.direction][i]
 
             if 0 < map_x < len(self.map_data[0]) and 0 < map_y < len(self.map_data):
                 data = self.map_data[map_y][map_x]
@@ -141,7 +143,7 @@ class MazeController:
         self.maze_view.canvas.delete("all")
         self.set_maze()
         # ログ処理
-        self.getLoc(self.model.px, self.model.py)
+        self.getLoc(self.model.loc.px, self.model.loc.py)
         self.app.controller.writeToLog(f"迷路開始 ({self.dim + 2}D)")
         logger.debug("GENERATE", extra={"addinfo": f"迷路生成 ({self.dim + 2}D)"})
 

@@ -91,6 +91,7 @@ class GameController:
             self.maze_controller = self.maze_2d_controller
         else:
             self.maze_controller = self.maze_3d_controller
+        self.maze_controller.set_dimension(dim)
 
     # key バインド
     def set_key_bind(self, target: Tk, maze: MazeController) -> None:
