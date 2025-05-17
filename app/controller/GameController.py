@@ -35,26 +35,28 @@ class GameController:
 
     def set_maze_controller(self) -> None:
         # コントローラの作成
-        self.maze_2d_controller = Maze2DController(self.app, self.model, self.conf)
-        self.maze_3d_controller = Maze3DController(self.app, self.model, self.conf)
+        self.maze_2d_controller = Maze2DController(self.app, self.model)
+        self.maze_3d_controller = Maze3DController(self.app, self.model)
         self.set_key_bind(self.app, self.maze_2d_controller)
         self._set_controller(0)
 
-    def set_view(self, start_view: StartView, maze_view: MazeView, main_view: Frame, operation_view: OperationView, log_view: LogView) -> None:
+    def set_view(self, start_view: StartView, maze_view: MazeView, operation_view: OperationView) -> None:
         """それぞれのviewをセットする関数
 
         Args:
-            start_view (StartView): _description_
-            maze_view (MazeView): _description_
-            main_view (Frame): _description_
-            operation_view (OperationView): _description_
-            log_view (LogView): _description_
+            start_view (StartView): スタート画面
+            maze_view (MazeView): 迷路画面
+            main_view (Frame): ？
+            operation_view (OperationView): 操作説明画面
+            log_view (LogView): ログ
         """
         self.start_view = start_view
         self.maze_view = maze_view
-        self.main_view = main_view
+        self.main_view = maze_view.maze_view
         self.operation_view = operation_view
-        self.log_view = log_view
+        self.log_view = maze_view.log_view
+        self.maze_2d_controller.set_maze_view(self.maze_view)
+        self.maze_3d_controller.set_maze_view(self.maze_view)
 
     def set_maze_frame(self) -> None:
         """
@@ -65,8 +67,10 @@ class GameController:
 
     # 2D, 3D の切替
     def change_dimension(self, dim: int) -> None:
-        """
-        2D, 3D の切替を行う関数
+        """2D, 3D の切替を行う関数
+
+        Args:
+            dim (int): 設定するディメンション
         """
         logger.debug("SET", extra={"addinfo": f"{dim + 2}D"})
         # 各ラジオボタンと変数を共有
@@ -85,7 +89,7 @@ class GameController:
         """2D, 3D のコントローラーの切替を行う関数
 
         Args:
-            dim (int): _description_
+            dim (int): 設定するディメンション
         """
         if dim == 0:
             self.maze_controller = self.maze_2d_controller
@@ -95,12 +99,22 @@ class GameController:
 
     # key バインド
     def set_key_bind(self, target: Tk, maze: MazeController) -> None:
+        """迷路操作のためのキーイベントをバインドする関数
+
+        Args:
+            target (Tk): キーバインドを設定するウィンドウ
+            maze (MazeController): 設定するハンドラー
+        """
         target.bind("<KeyPress-Left>", maze.key_event_handler)
         target.bind("<KeyPress-Up>", maze.key_event_handler, "+")
         target.bind("<KeyPress-Right>", maze.key_event_handler, "+")
         target.bind("<KeyPress-Down>", maze.key_event_handler, "+")
 
     def unset_key_bind(self, target: Tk) -> None:
+        """迷路操作のためのキーイベントをバインド解除する関数
+        Args:
+            target (Tk): キーバインドを解除するウィンドウ
+        """
         target.unbind("<KeyPress-Left>")
         target.unbind("<KeyPress-Up>")
         target.unbind("<KeyPress-Right>")
@@ -127,14 +141,20 @@ class GameController:
 
     # 画面遷移
     def raise_frame(self, frame: Frame) -> None:
-        """
-        画面遷移用の関数
+        """画面遷移用の関数
+
+        Args:
+            frame (Frame): 遷移先のフレーム
         """
         logger.debug("FRAME", extra={"addinfo": f"{type(frame)}に遷移"})
         frame.tkraise()
 
     def writeToLog(self, msg: str) -> None:
-        """ログ管理の関数"""
+        """ログ管理の関数
+
+        Args:
+            msg (str): メッセージ
+        """
         message = f"{datetime.strftime(datetime.now(timezone.utc), '%H:%M:%S')}  {msg}"
         self.log_view.log_widget["state"] = "normal"
         if self.log_view.log_widget.index("end-1c") != "1.0":

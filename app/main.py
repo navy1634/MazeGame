@@ -27,12 +27,8 @@ class App(Tk):
         self.controller.set_view(
             start_view=self.start_view,
             maze_view=self.maze_view,
-            main_view=self.maze_view.maze_view,
             operation_view=self.operation_view,
-            log_view=self.maze_view.log_view,
         )
-        self.controller.maze_2d_controller.set_maze_view(self.maze_view)
-        self.controller.maze_3d_controller.set_maze_view(self.maze_view)
         # メニューバーの生成
         self.config(menu=self.set_menu())
         # ウィンドウの詳細設定
@@ -60,8 +56,9 @@ class App(Tk):
         self.bind("<Control-Key-c>", lambda _: self.controller.raise_frame(self.controller.operation_view))
 
     def _set_frame(self) -> None:
-        """フレームの設置"""
-        # 各画面の生成
+        """フレームの設置
+        各画面の生成を行う関数
+        """
         # スタート画面
         self.start_view = StartView(self, self.controller)
         self.start_view.grid(row=0, column=0, sticky="nsew")

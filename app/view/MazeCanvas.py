@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from PIL import Image, ImageTk
 
+from app.config import config
 from app.config.type import Maze3DColor
 
 if TYPE_CHECKING:
@@ -13,10 +14,10 @@ if TYPE_CHECKING:
 
 class MazeCanvas(Canvas):
     def __init__(self, parent: Tk | Frame, controller: GameController) -> None:
-        super().__init__(parent, width=800, height=600, background="#020202")
+        super().__init__(parent, width=config.FRAME_WIDTH, height=config.FRAME_HEIGHT, background="#020202")
         self.controller = controller
-        self.width = 800
-        self.height = 600
+        self.width = config.FRAME_WIDTH
+        self.height = config.FRAME_HEIGHT
 
     # プレイヤー生成
     def load_player(self, image_file_name: str) -> ImageTk.PhotoImage:

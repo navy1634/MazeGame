@@ -4,7 +4,6 @@ from logging import getLogger
 from tkinter import Canvas, Event
 from typing import TYPE_CHECKING
 
-from app.config import config
 from app.controller.MazeController import MazeController
 from app.model.MazeMap import MazeMap
 
@@ -15,11 +14,9 @@ logger = getLogger("maze_root").getChild(__name__)
 
 
 class Maze2DController(MazeController):
-    def __init__(self, app: App, model: MazeMap, conf: dict) -> None:
-        super().__init__(app, model, conf)
+    def __init__(self, app: App, model: MazeMap) -> None:
+        super().__init__(app, model)
         self.controller = app.controller
-        self.frame_width = conf["3D"]["FrameWidth"]
-        self.frame_height = conf["3D"]["FrameHeight"]
 
     # 迷路生成
     def draw_maze(self) -> Canvas:

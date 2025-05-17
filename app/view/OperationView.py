@@ -7,15 +7,14 @@ class OperationView(Frame):
         self.parent = parent
         self.widget_width = 30
         self.widget_height = 3
-        self.set_frame()
 
-    def set_frame(self) -> None:
         frame_2D = self.set_2D_frame()
         frame_3D = self.set_3D_frame()
         frame_common = self.set_common_frame()
         frame_2D.grid(row=0, column=0)
         frame_3D.grid(row=0, column=1)
         frame_common.grid(row=1, column=0, columnspan=2)
+
         # 四隅に寄せる
         self.grid_rowconfigure(0, weight=2, pad=0)
         self.grid_columnconfigure(0, weight=2)

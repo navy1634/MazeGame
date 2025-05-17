@@ -16,10 +16,9 @@ logger = getLogger("maze_root").getChild(__name__)
 
 
 class MazeController:
-    def __init__(self, app: App, model: MazeMap, conf) -> None:
+    def __init__(self, app: App, model: MazeMap) -> None:
         self.app = app
         self.model = model
-        self.conf = conf
         self.px, self.py = 1, 1
         self.dim = 0
 

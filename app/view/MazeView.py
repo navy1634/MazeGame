@@ -15,17 +15,13 @@ if TYPE_CHECKING:
 class MazeView(Frame):
     def __init__(self, parent: Tk | Frame, controller: GameController) -> None:
         super().__init__(parent)
-        self.parent = parent
-        self.controller = controller
-        self.px, self.py = 1, 1
-        self.seed = 0
 
         # 迷路画面の生成
         maze_index = Label(self, text="↑ → ↓ ← キーで操作、Ctrl+Cで操作方法の表示、ゴールに辿り着くとクリア")
-        self.option_view = OptionView(self, self.controller, self.controller.conf)
-        self.log_view = LogView(self, self.controller)
+        self.option_view = OptionView(self, controller)
+        self.log_view = LogView(self, controller)
         self.maze_view = Frame(self)
-        self.canvas = MazeCanvas(self.maze_view, self.controller)
+        self.canvas = MazeCanvas(self.maze_view, controller)
         self.player_image = self.canvas.load_player(config.IMAGE_DIR + "/player.png")
 
         # 迷路画面の配置設定

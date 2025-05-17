@@ -23,14 +23,12 @@ class Maze3Dto2DController(MazeController):
     bg_color = "#020202"
     tile_size = 40
 
-    def __init__(self, controller: GameController, model: MazeMap, view: MazeView, conf: dict) -> None:
+    def __init__(self, controller: GameController, model: MazeMap, view: MazeView) -> None:
         self.controller = controller
         self.view = view
         self.model = model
         self.dim = 1
         self.px, self.py = 1, 1
-        self.frame_width = conf["3D"]["frame_width"]
-        self.frame_height = conf["3D"]["frame_height"]
 
     # 迷路生成
     def draw_maze(self) -> Canvas:
