@@ -61,7 +61,13 @@ class MazeController:
         """
         マップとプレイヤーを描画する
         """
-        self.maze_view.canvas.draw_maze()
+        if self.dim == 0:
+            self.maze_view.canvas.draw_maze_2d()
+            self.maze_view.canvas.draw_player()
+        else:
+            self.maze_view.canvas.draw_maze_3d()
+            self.maze_view.canvas.draw_maze_3dto2d()
+            self.maze_view.canvas.draw_player_3d2d()
 
     # 迷路生成
     def set_maze(self) -> None:

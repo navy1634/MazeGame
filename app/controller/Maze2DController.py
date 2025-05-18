@@ -21,7 +21,7 @@ class Maze2DController(MazeController):
     # 迷路生成
     def draw_maze(self) -> Canvas:
         # マップとプレイヤーを描画する
-        self.view.canvas.draw_maze()
+        self.view.canvas.draw_map()
         return self.view.canvas
 
     # キーイベント

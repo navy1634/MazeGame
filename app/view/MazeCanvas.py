@@ -16,6 +16,7 @@ class MazeCanvas(Canvas):
     def __init__(self, parent: Tk | Frame, controller: GameController) -> None:
         super().__init__(parent, width=config.FRAME_WIDTH, height=config.FRAME_HEIGHT, background="#020202")
         self.controller = controller
+        self.maze_controller = controller.maze_controller
         self.width = config.FRAME_WIDTH
         self.height = config.FRAME_HEIGHT
         self.player_image = self.load_player(config.IMAGE_DIR + "/player.png")
@@ -34,7 +35,6 @@ class MazeCanvas(Canvas):
         img_tk = ImageTk.PhotoImage(img)
         return img_tk
 
-    # プレイヤー描画
     def draw_player(self) -> None:
         """プレイヤーの描画
         2D迷路で操作するキャラクターを表示
@@ -42,14 +42,12 @@ class MazeCanvas(Canvas):
         x, y = self.maze_controller.get_player_position()
         self.player = self.create_image(x * self.tile_size_x, y * self.tile_size_y, image=self.player_image, anchor="nw")
 
-    # プレイヤー描画
     def draw_player_3d2d(self):
         """プレイヤーの描画
         3D迷路で操作するキャラクターを表示
         """
         self.player = self.create_image(730, 550, image=self.player_image, anchor="nw")
 
-    # タイルサイズの計算
     def maze_config(self):
         """タイルサイズの計算"""
         self.maze_width, self.maze_height = self.controller.model.get_maze_size()
@@ -60,39 +58,26 @@ class MazeCanvas(Canvas):
     def draw_map(self) -> None:
         """マップとプレイヤーを描画する"""
         self.delete("all")
-        self.draw_maze()
+        self.maze_controller.draw_map()
 
     def draw_map_event(self) -> None:
         """マップとプレイヤーを描画する"""
         self.delete("all")
         self.direction = self.controller.model.set_direction(self.controller.model._default_direction())
-        self.draw_maze()
+        self.maze_controller.draw_map()
 
-    # 迷路解読
-    def draw_maze(self):
-        if self.controller.maze_controller.dim == 0:
-            self.draw_maze_2d()
-            self.draw_player()
-        else:
-            self.draw_maze_3d()
-            self.draw_maze_3dto2d()
-            self.draw_player_3d2d()
-
-    # 迷路描画
-    # 2D
     def draw_maze_2d(self) -> None:
         """2D迷路の描画"""
         # 左上から右下へと描画
-        # 迷路の行数
-        # 迷路の列数
         for y in range(self.maze_height):
             y1 = y * self.tile_size_y
             y2 = y1 + self.tile_size_y
+
             for x in range(self.maze_width):
                 x1 = x * self.tile_size_x
                 x2 = x1 + self.tile_size_x
                 # 該当場所の値を得る
-                p = self.controller.maze_controller.map_data[y][x]
+                p = self.maze_controller.map_data[y][x]
                 # 値に応じた色を決定する
                 if p == 0:
                     color = "#404040"
@@ -107,7 +92,6 @@ class MazeCanvas(Canvas):
                 # 正方形を描画
                 self.create_rectangle(x1, y1, x2, y2, fill=color, outline=color, width=2)
 
-    # 3D用2D
     def draw_maze_3dto2d(self) -> None:
         """3D迷路の描画"""
         # 左上から右下へと描画
@@ -146,7 +130,6 @@ class MazeCanvas(Canvas):
 
         map_viz = self.controller.maze_3d_controller.get_maze_mini_map()
         self._wall_row_first(map_viz)
-
         self.create_line(100, 470, 700, 470, fill=Maze3DColor.LAYER1)
 
         if map_viz[7] == 0:
