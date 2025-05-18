@@ -22,8 +22,13 @@ class MazeCanvas(Canvas):
 
     # プレイヤー生成
     def load_player(self, image_file_name: str) -> ImageTk.PhotoImage:
-        """
-        プレイヤーの画像を読み込む
+        """プレイヤーの画像を読み込む
+
+        Args:
+            image_file_name (str): 画像の保存場所
+
+        Returns:
+            ImageTk.PhotoImage: 画像
         """
         img = Image.open(image_file_name)
         img_tk = ImageTk.PhotoImage(img)
@@ -31,27 +36,34 @@ class MazeCanvas(Canvas):
 
     # プレイヤー描画
     def draw_player(self) -> None:
-        x, y = self.controller.maze_controller.get_player_position()
+        """プレイヤーの描画
+        2D迷路で操作するキャラクターを表示
+        """
+        x, y = self.maze_controller.get_player_position()
         self.player = self.create_image(x * self.tile_size_x, y * self.tile_size_y, image=self.player_image, anchor="nw")
 
     # プレイヤー描画
     def draw_player_3d2d(self):
+        """プレイヤーの描画
+        3D迷路で操作するキャラクターを表示
+        """
         self.player = self.create_image(730, 550, image=self.player_image, anchor="nw")
 
     # タイルサイズの計算
     def maze_config(self):
+        """タイルサイズの計算"""
         self.maze_width, self.maze_height = self.controller.model.get_maze_size()
         self.tile_size_x = self.width / self.maze_width
         self.tile_size_y = self.height / self.maze_height
 
     # 迷路表示
     def draw_map(self) -> None:
-        # マップとプレイヤーを描画する
+        """マップとプレイヤーを描画する"""
         self.delete("all")
         self.draw_maze()
 
     def draw_map_event(self) -> None:
-        # マップとプレイヤーを描画する
+        """マップとプレイヤーを描画する"""
         self.delete("all")
         self.direction = self.controller.model.set_direction(self.controller.model._default_direction())
         self.draw_maze()
@@ -69,6 +81,7 @@ class MazeCanvas(Canvas):
     # 迷路描画
     # 2D
     def draw_maze_2d(self) -> None:
+        """2D迷路の描画"""
         # 左上から右下へと描画
         # 迷路の行数
         # 迷路の列数
@@ -96,6 +109,7 @@ class MazeCanvas(Canvas):
 
     # 3D用2D
     def draw_maze_3dto2d(self) -> None:
+        """3D迷路の描画"""
         # 左上から右下へと描画
         # 迷路の行数
         #  |0|1|2|
@@ -128,6 +142,8 @@ class MazeCanvas(Canvas):
 
     # 3D
     def draw_maze_3d(self) -> None:
+        """3D迷路の描画"""
+
         map_viz = self.controller.maze_3d_controller.get_maze_mini_map()
         self._wall_row_first(map_viz)
 

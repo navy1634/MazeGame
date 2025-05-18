@@ -34,7 +34,7 @@ class GameController:
         self.conf = self.get_setting()
 
     def set_maze_controller(self) -> None:
-        # コントローラの作成
+        """コントローラの作成"""
         self.maze_2d_controller = Maze2DController(self.app, self.model)
         self.maze_3d_controller = Maze3DController(self.app, self.model)
         self.set_key_bind(self.app, self.maze_2d_controller)

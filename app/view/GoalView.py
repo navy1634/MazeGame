@@ -24,12 +24,15 @@ class GoalView(Frame):
         frame.pack()
 
     def raise_start_frame(self) -> None:
+        """スタート画面に戻る"""
         self.controller.raise_frame(self.controller.start_view)
 
     def raise_maze_reset(self) -> None:
+        """迷路をリセットして迷路画面を表示する"""
         self.controller.maze_controller.reset()
         self.controller.raise_frame(self.controller.maze_view)
 
     def raise_maze_restart(self) -> None:
+        """迷路を新しく開始して迷路画面を表示する"""
         self.controller.maze_controller.restart()
         self.controller.raise_frame(self.controller.maze_view)

@@ -22,6 +22,11 @@ class OperationView(Frame):
         self.grid_columnconfigure(1, weight=2)
 
     def set_common_frame(self) -> LabelFrame:
+        """画面の操作方法
+
+        Returns:
+            LabelFrame: 説明ラベル
+        """
         frame = LabelFrame(self, text="操作方法 共通")
 
         Label(frame, text="スタート画面に戻る", width=self.widget_width, height=self.widget_height).grid(row=0, column=0)
@@ -47,6 +52,11 @@ class OperationView(Frame):
         return frame
 
     def set_2D_frame(self) -> LabelFrame:
+        """2D迷路の操作方法
+
+        Returns:
+            LabelFrame: 説明ラベル
+        """
         frame = LabelFrame(self, text="操作方法 2D", padx=1, pady=10)
 
         Label(frame, text="上に進む", width=self.widget_width, height=self.widget_height).grid(row=0, column=0)
@@ -62,6 +72,11 @@ class OperationView(Frame):
         return frame
 
     def set_3D_frame(self) -> LabelFrame:
+        """3D迷路の操作方法
+
+        Returns:
+            LabelFrame: 説明ラベル
+        """
         frame = LabelFrame(self, text="操作方法 3D", padx=1, pady=10)
 
         Label(frame, text="前に進む", width=self.widget_width, height=self.widget_height).grid(row=0, column=0)

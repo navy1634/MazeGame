@@ -18,7 +18,17 @@ class MazeMap(Maze):
         self.seed: int | None = None
         self.direction = DIRECTION.NORTH  # プレイヤーの初期方向
 
-    def create_maze(self, N: int, M: int, seed: int | None = None):
+    def create_maze(self, N: int, M: int, seed: int | None = None) -> list:
+        """迷路の生成
+
+        Args:
+            N (int): 迷路の行数
+            M (int): 迷路の列数
+            seed (int | None, optional): シード値. Defaults to None.
+
+        Returns:
+            _type_: _description_
+        """
         # 迷路生成
         super().__init__(seed)
         self.generator = Prims(N, M)
@@ -56,6 +66,7 @@ class MazeMap(Maze):
 
     # 初期設定
     def set_default_position(self) -> None:
+        """初期位置に戻す"""
         self.loc.px = 1
         self.loc.py = 1
         self._default_direction()

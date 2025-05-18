@@ -29,7 +29,7 @@ class StartView(Frame):
         """ボタンの作成
 
         Returns:
-            Frame: _description_
+            Frame: ボタンを配置するフレーム
         """
         frame = Frame(self, height=15, width=30)
 
@@ -53,7 +53,7 @@ class StartView(Frame):
         """迷路サイズ設定用のフレーム
 
         Returns:
-            LabelFrame: _description_
+            LabelFrame: 迷路サイズ設定
         """
         frame = LabelFrame(self, text="迷路サイズ", height=15, width=30)
 
@@ -75,7 +75,7 @@ class StartView(Frame):
         """モード設定用のボタン
 
         Returns:
-            _type_: _description_
+            LabelFrame: モード設定ボタン
         """
         frame = LabelFrame(self, text="モード設定", width=40, height=20)
         self.radio_value = IntVar()
@@ -88,10 +88,25 @@ class StartView(Frame):
         return frame
 
     def set_radio_value(self, value: int) -> None:
+        """ラジオボタンの値を設定する
+
+        Args:
+            value (int): 値
+        """
         self.radio_value.set(value)
 
     def get_radio_value(self) -> int:
+        """ラジオボタンの値を取得する
+
+        Returns:
+            int: ラジオボタンの値 (0 or 1)
+        """
         return self.radio_value.get()
 
     def get_size(self) -> tuple[int, int]:
+        """迷路のサイズを取得する
+
+        Returns:
+            tuple[int, int]: 迷路のサイズ (height, width)
+        """
         return self.size_h.get(), self.size_w.get()
