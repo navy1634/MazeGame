@@ -4,12 +4,20 @@
     "dictionaryDefinitions": [],
     "dictionaries": [],
     "words": [
+        "borderwidth",
         "Dsub",
         "keysym",
+        "levelname",
         "mazelib",
+        "padx",
+        "pady",
+        "rowspan",
         "subcanvas",
+        "tearoff",
+        "textvariable",
         "Tkinter",
-        "vectorize"
+        "vectorize",
+        "yscrollcommand"
     ],
     "ignoreWords": [],
     "import": []

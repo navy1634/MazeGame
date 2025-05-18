@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from logging import getLogger
-from logging import StreamHandler, FileHandler, Formatter
-from logging import DEBUG
-# from logging import WARNING, ERROR, CRITICAL, config
 from datetime import datetime, timedelta, timezone
-from config.conf import LOG_DIR
+from logging import DEBUG, FileHandler, Formatter, Logger, StreamHandler, getLogger
+
+from app.config.config import LOG_DIR
 
 
-def logger_conf():
+def logger_conf() -> Logger:
     """
     ログ取得に関する関数
     """
@@ -21,7 +19,7 @@ def logger_conf():
 
     # ハンドラの生成
     sh = StreamHandler(sys.stdout)
-    fh = FileHandler(filename=LOG_DIR + "/{time}.log".format(time=time), encoding='utf-8')
+    fh = FileHandler(filename=LOG_DIR + "/{time}.log".format(time=time), encoding="utf-8")
     # 出力レベルの設定
     sh.setLevel(DEBUG)
     fh.setLevel(DEBUG)
@@ -42,5 +40,3 @@ def logger_conf():
 
     logger.debug("START", extra={"addinfo": "ログ取得開始"})
     return logger
-
-
