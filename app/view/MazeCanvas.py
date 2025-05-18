@@ -18,6 +18,7 @@ class MazeCanvas(Canvas):
         self.controller = controller
         self.width = config.FRAME_WIDTH
         self.height = config.FRAME_HEIGHT
+        self.player_image = self.load_player(config.IMAGE_DIR + "/player.png")
 
     # プレイヤー生成
     def load_player(self, image_file_name: str) -> ImageTk.PhotoImage:
@@ -29,9 +30,13 @@ class MazeCanvas(Canvas):
         return img_tk
 
     # プレイヤー描画
-    def draw_player(self, player_image: ImageTk.PhotoImage) -> None:
+    def draw_player(self) -> None:
         x, y = self.controller.maze_controller.get_player_position()
-        self.player = self.create_image(x * self.tile_size_x, y * self.tile_size_y, image=player_image, anchor="nw")
+        self.player = self.create_image(x * self.tile_size_x, y * self.tile_size_y, image=self.player_image, anchor="nw")
+
+    # プレイヤー描画
+    def draw_player_3d2d(self):
+        self.player = self.create_image(730, 550, image=self.player_image, anchor="nw")
 
     # タイルサイズの計算
     def maze_config(self):
@@ -55,9 +60,11 @@ class MazeCanvas(Canvas):
     def draw_maze(self):
         if self.controller.maze_controller.dim == 0:
             self.draw_maze_2d()
+            self.draw_player()
         else:
             self.draw_maze_3d()
             self.draw_maze_3dto2d()
+            self.draw_player_3d2d()
 
     # 迷路描画
     # 2D

@@ -3,10 +3,7 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from config import config
-
 from app.config.type import DIRECTION
-from app.controller.Maze3Dsub import Maze3Dto2DController
 from app.controller.MazeController import MazeController
 from app.model.MazeMap import MazeMap
 
@@ -21,7 +18,6 @@ class Maze3DController(MazeController):
     def __init__(self, app: App, model: MazeMap) -> None:
         super().__init__(app, model)
         self.controller = app.controller
-        # self.subcanvas_controller = Maze3Dto2DController(controller, model, view, conf)
 
     def get_maze_mini_map(self) -> list[int]:
         """迷路のミニマップを取得する
@@ -98,6 +94,8 @@ class Maze3DController(MazeController):
                 self.model.move_player(px_current, py_current)
                 self.view.canvas.delete("all")
                 self.view.canvas.draw_maze_3d()
+                self.view.canvas.draw_maze_3dto2d()
+                self.maze_view.canvas.draw_player_3d2d()
                 self.controller.maze_controller.getLoc(px_current, py_current)
                 logger.debug("MOVE", extra={"addinfo": f"player={px_current},{py_current}"})
 
@@ -117,3 +115,5 @@ class Maze3DController(MazeController):
             self.model.set_direction(new_direction)
             self.view.canvas.delete("all")
             self.view.canvas.draw_maze_3d()
+            self.view.canvas.draw_maze_3dto2d()
+            self.maze_view.canvas.draw_player_3d2d()

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import annotations
 
 from abc import abstractmethod
@@ -63,7 +62,6 @@ class MazeController:
         マップとプレイヤーを描画する
         """
         self.maze_view.canvas.draw_maze()
-        self.maze_view.canvas.draw_player(player_image=self.maze_view.player_image)
 
     # 迷路生成
     def set_maze(self) -> None:

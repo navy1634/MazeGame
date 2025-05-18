@@ -22,7 +22,6 @@ class MazeView(Frame):
         self.log_view = LogView(self, controller)
         self.maze_view = Frame(self)
         self.canvas = MazeCanvas(self.maze_view, controller)
-        self.player_image = self.canvas.load_player(config.IMAGE_DIR + "/player.png")
 
         # 迷路画面の配置設定
         maze_index.grid(row=0, column=0)
