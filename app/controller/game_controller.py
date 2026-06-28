@@ -1,23 +1,25 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+import shutil
+from datetime import UTC, datetime
 from logging import getLogger
-from tkinter import Frame, Tk
+from os import path
 from typing import TYPE_CHECKING
 
 from app.config import config
-from app.controller.Maze2DController import Maze2DController
-from app.controller.Maze3DController import Maze3DController
-from app.model.MazeMap import MazeMap
-from app.view.LogView import LogView
-from app.view.MazeView import MazeView
-from app.view.OperationView import OperationView
-from app.view.StartView import StartView
+from app.controller.maze_2d_controller import Maze2DController
+from app.controller.maze_3d_controller import Maze3DController
 
 if TYPE_CHECKING:
-    from app.controller.MazeController import MazeController
-    from app.main import App
+    from tkinter import Frame, Tk
+
+    from app.app import App
+    from app.controller.maze_controller_interface import MazeController
+    from app.model.maze_map import MazeMap
+    from app.view.maze_view import MazeView
+    from app.view.operation_view import OperationView
+    from app.view.start_view import StartView
 
 logger = getLogger("maze_root").getChild(__name__)
 
@@ -35,8 +37,9 @@ class GameController:
 
     def set_maze_controller(self) -> None:
         """コントローラの作成"""
-        self.maze_2d_controller = Maze2DController(self.app, self.model)
-        self.maze_3d_controller = Maze3DController(self.app, self.model)
+        self.maze_2d_controller: Maze2DController = Maze2DController(self.app, self.model)
+        self.maze_3d_controller: Maze3DController = Maze3DController(self.app, self.model)
+        self.maze_controller: MazeController
         self.set_key_bind(self.app, self.maze_2d_controller)
         self._set_controller(0)
 
@@ -46,7 +49,7 @@ class GameController:
         Args:
             start_view (StartView): スタート画面
             maze_view (MazeView): 迷路画面
-            main_view (Frame): ？
+            main_view (Frame): ?
             operation_view (OperationView): 操作説明画面
             log_view (LogView): ログ
         """
@@ -109,6 +112,10 @@ class GameController:
         target.bind("<KeyPress-Up>", maze.key_event_handler, "+")
         target.bind("<KeyPress-Right>", maze.key_event_handler, "+")
         target.bind("<KeyPress-Down>", maze.key_event_handler, "+")
+        target.bind("<KeyPress-w>", maze.key_event_handler, "+")
+        target.bind("<KeyPress-a>", maze.key_event_handler, "+")
+        target.bind("<KeyPress-s>", maze.key_event_handler, "+")
+        target.bind("<KeyPress-d>", maze.key_event_handler, "+")
 
     def unset_key_bind(self, target: Tk) -> None:
         """迷路操作のためのキーイベントをバインド解除する関数
@@ -119,14 +126,21 @@ class GameController:
         target.unbind("<KeyPress-Up>")
         target.unbind("<KeyPress-Right>")
         target.unbind("<KeyPress-Down>")
+        target.unbind("<KeyPress-w>")
+        target.unbind("<KeyPress-a>")
+        target.unbind("<KeyPress-s>")
+        target.unbind("<KeyPress-d>")
 
     # 設定ファイル
-    def get_setting(self) -> dict:
+    def get_setting(self) -> dict[str, int]:
         """
         設定ファイルの読み込み
         """
-        with open(config.SRC_DIR + "/config/setting.json", "r", encoding="utf-8") as f:
-            conf = json.load(f)
+        # ユーザー領域に設定が無ければ、同梱の初期値をコピーする
+        if not path.exists(config.SETTING_FILE):
+            shutil.copyfile(config.DEFAULT_SETTING_FILE, config.SETTING_FILE)
+        with open(config.SETTING_FILE, encoding="utf-8") as f:
+            conf: dict[str, int] = json.load(f)
             f.close()
         return conf
 
@@ -135,7 +149,7 @@ class GameController:
         設定ファイルの保存
         """
         self.conf["dim"] = self.start_view.get_radio_value()
-        with open(config.SRC_DIR + "/config/setting.json", "w", encoding="utf-8") as f:
+        with open(config.SETTING_FILE, "w", encoding="utf-8") as f:
             json.dump(self.conf, f)
             f.close()
 
@@ -155,7 +169,7 @@ class GameController:
         Args:
             msg (str): メッセージ
         """
-        message = f"{datetime.strftime(datetime.now(timezone.utc), '%H:%M:%S')}  {msg}"
+        message = f"{datetime.strftime(datetime.now(UTC), '%H:%M:%S')}  {msg}"
         self.log_view.log_widget["state"] = "normal"
         if self.log_view.log_widget.index("end-1c") != "1.0":
             self.log_view.log_widget.insert("end", "\n")

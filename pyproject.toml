@@ -3,19 +3,27 @@ name = "maze_2d3d"
 version = "0.1.0"
 description = "迷路ゲーム"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 dependencies = [
-    "setuptools>=75.3.0",
-    "mazelib>=0.9.14",
-    "pillow>=11.0.0",
-    "numpy>=1.23.5",
-    "ruff>=0.11.6",
+    "setuptools>=82.0.1",
+    "mazelib>=0.9.16",
+    "pillow>=12.2.0",
+    "numpy>=2.5.0",
+]
+[dependency-groups]
+dev = [
+    "mypy>=2.1.0",
     "pre-commit>=4.2.0",
+    "pyinstaller>=6.21.0",
+    "pytest>=9.1.0",
+    "pytest-cov>=6.2.1",
+    "pytest-env>=1.6.0",
+    "ruff>=0.15.20",
+    "taskipy>=1.14.1",
 ]
 
 [tool.setuptools]
 packages = ["app", "logs", "images"]
-
 
 [build-system]
 requires = ["setuptools>=75.3.0", "wheel", "cython>=3.0.11"]
@@ -25,16 +33,15 @@ build-backend = "setuptools.build_meta"
 # The tabulation size to calculate line length.
 indent-width = 4
 line-length = 200
-src = ["."]
 
 [tool.ruff.lint]
 # A list of rule codes or prefixes to select
-select = ["B", "E", "F", "I", "N", "W", "ANN", "C4", "C90", "DTZ", "T20", "PT", "PL", "YTT"]
+select = ["ASYNC", "B", "BLE", "C4", "COM", "DTZ", "F", "G", "INP", "N", "PERF", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "Q", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "UP", "W"]
 # A list of rule codes or prefixes to ignore
-ignore = ["F401", "F841", "W505", "ARG", "I001", "ANN001", "ANN101", "ANN102", "ANN201", "B008", "PLR2004", "N802", "N806", "N803", "ANN202", "E501", "E402"]
+ignore = ["B008", "BLE001", "C417", "COM812", "E402", "E501", "F841", "G004", "I001", "N802", "N803", "N806", "PLR2004", "PT011", "RET504", "RUF001", "RUF012", "RUF022", "SIM102", "T201", "W505", "RET506"]
 
 # A list of rule codes or prefixes to consider autofixable
-fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT"]
+fixable = ["ASYNC", "B", "BLE", "C90", "COM", "DTZ", "F", "G", "I", "INP", "N", "PIE", "PLC", "PLE", "PLR", "PLW", "Q", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TRY", "W"]
 # A list of rule codes or prefixes to consider non-autofix-able.
 unfixable = ["F401", "F841", "W505", "ARG"]
 
@@ -56,15 +63,40 @@ max-complexity = 10
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+[tool.ruff.lint.pylint]
+max-args = 10
+
 [tool.mypy]
-python_version = "3.11"
-no_strict_optional = true
+python_version = "3.13"
+strict = true
 ignore_missing_imports = true
 check_untyped_defs = true
 
 [tool.pytest.ini_options]
-disable_test_id_escaping_and_forfeit_all_rights_to_community_support = true
+pythonpath = ["."]
 
-[tool.uv]
-dev-dependencies = [
+[tool.coverage.run]
+branch = true
+omit = ["tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug",
+    "if settings.DEBUG",
+    "if TYPE_CHECKING",
+    "if __name__ == .__main__.:",
+    "raise AssertionError",
+    "raise NotImplementedError",
 ]
+
+[tool.taskipy.tasks]
+lint = "ruff check . --fix"
+format = "ruff format ."
+lint-check = "ruff check ."
+format-check = "ruff format --check ."
+type-check = "mypy . --strict"
+test = "pytest"
+dev = "python run.py"
+build = "pyinstaller build.spec"

@@ -10,13 +10,13 @@ from app.config.type import DIRECTION
 from app.model.model import Loc
 
 
-class MazeMap(Maze):
+class MazeMap(Maze):  # type: ignore[misc]
     def __init__(self) -> None:
         self.loc = Loc()  # プレイヤーの初期位置
         self.seed: int | None = None
         self.direction = DIRECTION.NORTH  # プレイヤーの初期方向
 
-    def create_maze(self, N: int, M: int, seed: int | None = None) -> list:
+    def create_maze(self, N: int, M: int, seed: int | None = None) -> np.ndarray:
         """迷路の生成
 
         Args:
@@ -38,7 +38,7 @@ class MazeMap(Maze):
 
         return self.maze_tolist()
 
-    def solve_maze(self):
+    def solve_maze(self) -> np.ndarray:
         """
         迷路の解答生成アルゴリズム
         """
@@ -47,14 +47,14 @@ class MazeMap(Maze):
         self.solve()
         return self.maze_tolist()
 
-    def maze_tolist(self):
+    def maze_tolist(self) -> np.ndarray:
         """
         迷路の成形を行う
         """
         mz_str = str(self).replace("#", "0").replace(" ", "1").replace("S", "2").replace("E", "3").replace("+", "4").split("\n")
         mz_str_list = [list(x) for x in mz_str]
         self.map_data = np.vectorize(int)(mz_str_list)
-        return self.map_data
+        return self.map_data  # type: ignore[no-any-return]
 
     def get_maze_size(self) -> tuple[int, int]:
         """
@@ -67,9 +67,9 @@ class MazeMap(Maze):
         """初期位置に戻す"""
         self.loc.px = 1
         self.loc.py = 1
-        self._default_direction()
+        self.default_direction()
 
-    def set_seed(self, seed: int | None = None) -> None:
+    def set_seeds(self, seed: int | None = None) -> None:
         """乱数のシードをセットする関数
 
         Args:
@@ -115,11 +115,11 @@ class MazeMap(Maze):
         if mv == 0:
             return 1
         # 移動先がゴールなら2を返す
-        elif mv == 3:
+        if mv == 3:
             return 2
         return 0
 
-    def _default_direction(self) -> DIRECTION:
+    def default_direction(self) -> DIRECTION:
         """スタート時に壁に向いていないようにする
 
         Returns:
@@ -129,9 +129,9 @@ class MazeMap(Maze):
 
         if self.map_data[py_tmp][px_tmp + 1] == 1:
             return DIRECTION.EAST
-        elif self.map_data[py_tmp + 1][px_tmp] == 1:
+        if self.map_data[py_tmp + 1][px_tmp] == 1:
             return DIRECTION.SOUTH
-        elif self.map_data[py_tmp][px_tmp - 1] == 1:
+        if self.map_data[py_tmp][px_tmp - 1] == 1:
             return DIRECTION.WEST
         return DIRECTION.NORTH
 
@@ -151,7 +151,7 @@ class MazeMap(Maze):
         """
         return self.direction
 
-    def get_map_viz(self) -> list:
+    def get_map_viz(self) -> list[int]:
         """3D時のミニマップ取得用
 
         Returns:
@@ -167,9 +167,6 @@ class MazeMap(Maze):
             map_x = self.loc.px + config.POS_X[self.direction][i]
             map_y = self.loc.py + config.POS_Y[self.direction][i]
 
-            if 0 < map_x < len(self.map_data[0]) and 0 < map_y < len(self.map_data):
-                data = self.map_data[map_y][map_x]
-            else:
-                data = 0
+            data = self.map_data[map_y][map_x] if 0 < map_x < len(self.map_data[0]) and 0 < map_y < len(self.map_data) else 0
             map_viz.append(data)
         return map_viz

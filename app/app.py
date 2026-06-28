@@ -1,13 +1,12 @@
 from logging import getLogger
 from tkinter import Menu, Tk
 
-from app.controller.GameController import GameController
-from app.lib.SetLog import logger_conf
-from app.model.MazeMap import MazeMap
-from app.view.GoalView import GoalView
-from app.view.MazeView import MazeView
-from app.view.OperationView import OperationView
-from app.view.StartView import StartView
+from app.controller.game_controller import GameController
+from app.model.maze_map import MazeMap
+from app.view.goal_view import GoalView
+from app.view.maze_view import MazeView
+from app.view.operation_view import OperationView
+from app.view.start_view import StartView
 
 logger = getLogger("maze_root").getChild(__name__)
 
@@ -88,7 +87,7 @@ class App(Tk):
 
         # メニューバーに各メニューを追加
         menubar.add_cascade(label="Frame", menu=menu_file)
-        menubar.add_cascade(label="Dimension", command=lambda: self.change_dim_for_menu())
+        menubar.add_cascade(label="Dimension", command=self.change_dim_for_menu)
         menubar.add_cascade(label="Config", command=lambda: self.controller.raise_frame(self.controller.operation_view), accelerator="Ctrl+C")
 
         # 親ウィンドウのメニューに、作成したメニューバーを設定
@@ -99,10 +98,7 @@ class App(Tk):
         2D, 3Dを切り替える
         """
         dim = self.start_view.radio_value.get()
-        if dim == 0:
-            dim = 1
-        else:
-            dim = 0
+        dim = 1 if dim == 0 else 0
         self.controller.change_dimension(dim)
 
     def win_close(self) -> None:
@@ -116,13 +112,3 @@ class App(Tk):
     def run(self) -> None:
         """アプリの実行"""
         self.mainloop()
-
-
-def main():
-    logger = logger_conf()
-    app = App()
-    app.run()
-
-
-if __name__ == "__main__":
-    main()

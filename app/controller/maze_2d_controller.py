@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 from logging import getLogger
-from tkinter import Canvas, Event
 from typing import TYPE_CHECKING
 
-from app.controller.MazeController import MazeController
-from app.model.MazeMap import MazeMap
+from app.controller.maze_controller_interface import MazeController
 
 if TYPE_CHECKING:
-    from app.main import App
+    from tkinter import Canvas, Event
+
+    from app.app import App
+    from app.model.maze_map import MazeMap
 
 logger = getLogger("maze_root").getChild(__name__)
 
@@ -29,7 +30,8 @@ class Maze2DController(MazeController):
         # 移動前に前回の値を覚えておく
         px_tmp, py_tmp = self.model.get_player_position()
         # プレイヤーが上下左右のどちらに動くか判定
-        px_current, py_current = self._move_player(px=px_tmp, py=py_tmp, direction=e.keysym)
+        move_to = self._get_direction(e.keysym)
+        px_current, py_current = self._move_player(px=px_tmp, py=py_tmp, direction=move_to)
         # 入力通りに移動できるかを確認
         check = self.model.check_move(px=px_current, py=py_current)
         # 移動できる場合
@@ -38,7 +40,7 @@ class Maze2DController(MazeController):
             self.view.canvas.delete(self.view.canvas.player)
             self.maze_view.canvas.draw_player()
             self.controller.maze_controller.getLoc(px=px_current, py=py_current)
-            logger.debug("MOVE", extra={"addinfo": "player={0},{1}".format(px_current, py_current)})
+            logger.debug("MOVE", extra={"addinfo": f"player={px_current},{py_current}"})
 
         # 移動できない場合
         elif check == 1:

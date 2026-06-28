@@ -4,7 +4,7 @@ from tkinter import Frame, Text, Tk, ttk
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from app.controller.GameController import GameController
+    from app.controller.game_controller import GameController
 
 
 class LogView(Frame):

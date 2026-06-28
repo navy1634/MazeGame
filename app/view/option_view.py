@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from app.config import config
 
 if TYPE_CHECKING:
-    from app.controller.GameController import GameController
+    from app.controller.game_controller import GameController
 
 
 class OptionView(Frame):

@@ -4,7 +4,7 @@ from tkinter import Button, Frame, IntVar, Label, LabelFrame, Radiobutton, Spinb
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from app.controller.GameController import GameController
+    from app.controller.game_controller import GameController
 
 
 class StartView(Frame):
@@ -33,12 +33,16 @@ class StartView(Frame):
         """
         frame = Frame(self, height=15, width=30)
 
+        def _start_action() -> None:
+            self.controller.set_maze_frame()
+            self.controller.raise_frame(self.controller.maze_view)
+
         start_button = Button(
             frame,
             text="START",
             width=self.widget_width,
             height=self.widget_height,
-            command=lambda: [self.controller.set_maze_frame(), self.controller.raise_frame(self.controller.maze_view)],
+            command=_start_action,
             font=("HGS行書体", 15),
         )
         setting_button = Button(

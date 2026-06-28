@@ -5,6 +5,9 @@
 .venv
 .vscode
 logs/*
+build
+dist
+*.egg-info
 
 # files
 .env
