@@ -1,0 +1,29 @@
+name: Build Windows exe
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Build exe
+        run: uv run task build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MazeGame
+          path: dist/MazeGame.exe

@@ -1,10 +1,15 @@
+from __future__ import annotations
+
 from tkinter import Canvas, Frame, Tk
+from typing import TYPE_CHECKING
 
 from PIL import Image, ImageTk
 
 from app.config import config
 from app.config.type import Maze3DColor
-from app.controller.game_controller import GameController
+
+if TYPE_CHECKING:
+    from app.controller.game_controller import GameController
 
 
 class MazeCanvas(Canvas):

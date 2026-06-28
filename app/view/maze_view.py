@@ -1,9 +1,14 @@
-from tkinter import Frame, Label, Tk
+from __future__ import annotations
 
-from app.controller.game_controller import GameController
+from tkinter import Frame, Label, Tk
+from typing import TYPE_CHECKING
+
 from app.view.log_view import LogView
 from app.view.maze_canvas import MazeCanvas
 from app.view.option_view import OptionView
+
+if TYPE_CHECKING:
+    from app.controller.game_controller import GameController
 
 
 class MazeView(Frame):

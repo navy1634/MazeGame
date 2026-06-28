@@ -1,11 +1,17 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from logging import getLogger
-from tkinter import Event
+from typing import TYPE_CHECKING
 
-from app.app import App
 from app.config import config
-from app.model.maze_map import MazeMap
-from app.view.maze_view import MazeView
+
+if TYPE_CHECKING:
+    from tkinter import Event
+
+    from app.app import App
+    from app.model.maze_map import MazeMap
+    from app.view.maze_view import MazeView
 
 logger = getLogger("maze_root").getChild(__name__)
 

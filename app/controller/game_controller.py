@@ -1,19 +1,25 @@
+from __future__ import annotations
+
 import json
 import shutil
 from datetime import UTC, datetime
 from logging import getLogger
 from os import path
-from tkinter import Frame, Tk
+from typing import TYPE_CHECKING
 
 from app.config import config
 from app.controller.maze_2d_controller import Maze2DController
 from app.controller.maze_3d_controller import Maze3DController
-from app.controller.maze_controller_interface import MazeController
-from app.app import App
-from app.model.maze_map import MazeMap
-from app.view.maze_view import MazeView
-from app.view.operation_view import OperationView
-from app.view.start_view import StartView
+
+if TYPE_CHECKING:
+    from tkinter import Frame, Tk
+
+    from app.app import App
+    from app.controller.maze_controller_interface import MazeController
+    from app.model.maze_map import MazeMap
+    from app.view.maze_view import MazeView
+    from app.view.operation_view import OperationView
+    from app.view.start_view import StartView
 
 logger = getLogger("maze_root").getChild(__name__)
 

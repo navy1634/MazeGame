@@ -1,6 +1,10 @@
-from tkinter import Frame, Text, Tk, ttk
+from __future__ import annotations
 
-from app.controller.game_controller import GameController
+from tkinter import Frame, Text, Tk, ttk
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.controller.game_controller import GameController
 
 
 class LogView(Frame):

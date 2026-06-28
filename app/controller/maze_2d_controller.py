@@ -1,9 +1,15 @@
+from __future__ import annotations
+
 from logging import getLogger
-from tkinter import Canvas, Event
+from typing import TYPE_CHECKING
 
 from app.controller.maze_controller_interface import MazeController
-from app.app import App
-from app.model.maze_map import MazeMap
+
+if TYPE_CHECKING:
+    from tkinter import Canvas, Event
+
+    from app.app import App
+    from app.model.maze_map import MazeMap
 
 logger = getLogger("maze_root").getChild(__name__)
 

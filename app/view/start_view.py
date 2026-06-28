@@ -1,6 +1,10 @@
-from tkinter import Button, Frame, IntVar, Label, LabelFrame, Radiobutton, Spinbox, Tk
+from __future__ import annotations
 
-from app.controller.game_controller import GameController
+from tkinter import Button, Frame, IntVar, Label, LabelFrame, Radiobutton, Spinbox, Tk
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.controller.game_controller import GameController
 
 
 class StartView(Frame):
