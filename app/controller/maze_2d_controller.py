@@ -30,7 +30,8 @@ class Maze2DController(MazeController):
         # 移動前に前回の値を覚えておく
         px_tmp, py_tmp = self.model.get_player_position()
         # プレイヤーが上下左右のどちらに動くか判定
-        px_current, py_current = self._move_player(px=px_tmp, py=py_tmp, direction=e.keysym)
+        move_to = self._get_direction(e.keysym)
+        px_current, py_current = self._move_player(px=px_tmp, py=py_tmp, direction=move_to)
         # 入力通りに移動できるかを確認
         check = self.model.check_move(px=px_current, py=py_current)
         # 移動できる場合

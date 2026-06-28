@@ -13,6 +13,13 @@ class DIRECTION(IntEnum):
     WEST = 3
 
 
+class MOVETO(StrEnum):
+    UP = "up"
+    DOWN = "down"
+    LEFT = "left"
+    RIGHT = "right"
+
+
 class Maze3DColor(StrEnum):
     LAYER0 = "#a5bcf9"
     LAYER1 = "#626e97"

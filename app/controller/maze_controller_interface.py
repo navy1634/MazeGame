@@ -5,6 +5,7 @@ from logging import getLogger
 from typing import TYPE_CHECKING
 
 from app.config import config
+from app.config.type import MOVETO
 
 if TYPE_CHECKING:
     from tkinter import Event
@@ -91,16 +92,28 @@ class MazeController(ABC):
         return map_viz
 
     # プレイヤー移動
-    def _move_player(self, px: int, py: int, direction: str) -> tuple[int, int]:
-        if direction == "Up":
+    def _move_player(self, px: int, py: int, direction: MOVETO) -> tuple[int, int]:
+        if direction == MOVETO.UP:
             py -= 1
-        elif direction == "Left":
+        elif direction == MOVETO.LEFT:
             px -= 1
-        elif direction == "Right":
+        elif direction == MOVETO.RIGHT:
             px += 1
-        elif direction == "Down":
+        elif direction == MOVETO.DOWN:
             py += 1
         return px, py
+
+    def _get_direction(self, direction: str) -> MOVETO:
+        """矢印キーイベント"""
+        if direction in ("Up", "w"):
+            return MOVETO.UP
+        if direction in ("Down", "s"):
+            return MOVETO.DOWN
+        if direction in ("Left", "a"):
+            return MOVETO.LEFT
+        if direction in ("Right", "d"):
+            return MOVETO.RIGHT
+        raise ValueError
 
     @abstractmethod
     def key_event_handler(self, e: Event) -> None:

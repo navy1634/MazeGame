@@ -112,6 +112,10 @@ class GameController:
         target.bind("<KeyPress-Up>", maze.key_event_handler, "+")
         target.bind("<KeyPress-Right>", maze.key_event_handler, "+")
         target.bind("<KeyPress-Down>", maze.key_event_handler, "+")
+        target.bind("<KeyPress-w>", maze.key_event_handler, "+")
+        target.bind("<KeyPress-a>", maze.key_event_handler, "+")
+        target.bind("<KeyPress-s>", maze.key_event_handler, "+")
+        target.bind("<KeyPress-d>", maze.key_event_handler, "+")
 
     def unset_key_bind(self, target: Tk) -> None:
         """迷路操作のためのキーイベントをバインド解除する関数
@@ -122,6 +126,10 @@ class GameController:
         target.unbind("<KeyPress-Up>")
         target.unbind("<KeyPress-Right>")
         target.unbind("<KeyPress-Down>")
+        target.unbind("<KeyPress-w>")
+        target.unbind("<KeyPress-a>")
+        target.unbind("<KeyPress-s>")
+        target.unbind("<KeyPress-d>")
 
     # 設定ファイル
     def get_setting(self) -> dict[str, int]:

@@ -10,7 +10,7 @@ from app.config.type import DIRECTION
 from app.model.model import Loc
 
 
-class MazeMap(Maze): # type: ignore[misc]
+class MazeMap(Maze):  # type: ignore[misc]
     def __init__(self) -> None:
         self.loc = Loc()  # プレイヤーの初期位置
         self.seed: int | None = None

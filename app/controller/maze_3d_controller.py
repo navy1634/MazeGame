@@ -3,7 +3,7 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from app.config.type import DIRECTION
+from app.config.type import DIRECTION, MOVETO
 from app.controller.maze_controller_interface import MazeController
 
 if TYPE_CHECKING:
@@ -51,21 +51,21 @@ class Maze3DController(MazeController):
 
         return px, py
 
-    def _get_new_direction(self, current_direction: DIRECTION, keysym: str) -> DIRECTION:
+    def _get_new_direction(self, current_direction: DIRECTION, keysym: MOVETO) -> DIRECTION:
         """キー入力に基づいて新しい方向を向く
 
         Args:
             current_direction (str): 今の向き
             keysym (str): 押されたキー
 
-        Returns:
             int: 新しい方向
+        Returns:
         """
         turn_logic = {
-            DIRECTION.NORTH: {"Down": DIRECTION.SOUTH, "Left": DIRECTION.WEST, "Right": DIRECTION.EAST},
-            DIRECTION.SOUTH: {"Down": DIRECTION.NORTH, "Left": DIRECTION.EAST, "Right": DIRECTION.WEST},
-            DIRECTION.EAST: {"Down": DIRECTION.WEST, "Left": DIRECTION.NORTH, "Right": DIRECTION.SOUTH},
-            DIRECTION.WEST: {"Down": DIRECTION.EAST, "Left": DIRECTION.SOUTH, "Right": DIRECTION.NORTH},
+            DIRECTION.NORTH: {MOVETO.DOWN: DIRECTION.SOUTH, MOVETO.LEFT: DIRECTION.WEST, MOVETO.RIGHT: DIRECTION.EAST},
+            DIRECTION.SOUTH: {MOVETO.DOWN: DIRECTION.NORTH, MOVETO.LEFT: DIRECTION.EAST, MOVETO.RIGHT: DIRECTION.WEST},
+            DIRECTION.EAST: {MOVETO.DOWN: DIRECTION.WEST, MOVETO.LEFT: DIRECTION.NORTH, MOVETO.RIGHT: DIRECTION.SOUTH},
+            DIRECTION.WEST: {MOVETO.DOWN: DIRECTION.EAST, MOVETO.LEFT: DIRECTION.SOUTH, MOVETO.RIGHT: DIRECTION.NORTH},
         }
 
         # 現在の方向に対応する転換ロジックを取得
@@ -78,11 +78,11 @@ class Maze3DController(MazeController):
         キーイベント (e) と現在の方向 (current_direction) を受け取り、
         プレイヤーの移動または方向転換を行い、新しい方向を返す。
         """
-        key_direction = e.keysym
+        key_direction = self._get_direction(e.keysym)
         current_direction = self.model.get_direction()
 
         # 進行方向に移動する
-        if key_direction == "Up":
+        if key_direction == MOVETO.UP:
             # 現在地を取得
             px_tmp, py_tmp = self.model.get_player_position()
             px_current, py_current = self._move_player(px_tmp, py_tmp, current_direction)
@@ -110,7 +110,7 @@ class Maze3DController(MazeController):
                 logger.debug("GOAL", extra={"addinfo": "ゴール"})
 
         # 方向転換のみを行う
-        elif key_direction in ["Down", "Left", "Right"]:
+        else:
             new_direction = self._get_new_direction(current_direction, key_direction)
             self.model.set_direction(new_direction)
             self.view.canvas.delete("all")
