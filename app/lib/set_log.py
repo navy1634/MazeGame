@@ -1,17 +1,19 @@
-# -*- coding: utf-8 -*-
-
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from logging import DEBUG, FileHandler, Formatter, Logger, StreamHandler, getLogger
+from os import makedirs
 
 from app.config.config import LOG_DIR
+
+# ログ出力先のディレクトリを保証する
+makedirs(LOG_DIR, exist_ok=True)
 
 
 def logger_conf() -> Logger:
     """
     ログ取得に関する関数
     """
-    time = datetime.strftime(datetime.now(timezone.utc) + timedelta(hours=9), "%Y%m%d%H%M%S%f")
+    time = datetime.strftime(datetime.now(UTC) + timedelta(hours=9), "%Y%m%d%H%M%S%f")
     # ロガーの生成
     logger = getLogger("maze_root")
     # 出力レベルの設定
@@ -19,13 +21,13 @@ def logger_conf() -> Logger:
 
     # ハンドラの生成
     sh = StreamHandler(sys.stdout)
-    fh = FileHandler(filename=LOG_DIR + "/{time}.log".format(time=time), encoding="utf-8")
+    fh = FileHandler(filename=LOG_DIR + f"/{time}.log", encoding="utf-8")
     # 出力レベルの設定
     sh.setLevel(DEBUG)
     fh.setLevel(DEBUG)
     # sh.setLevel(WARNING)
 
-    # フォーマッタの生成（第一引数はメッセージのフォーマット文字列、第二引数は日付時刻のフォーマット文字列）
+    # フォーマッタの生成(第一引数はメッセージのフォーマット文字列、第二引数は日付時刻のフォーマット文字列)
     # 2022-12-15 14:17:47 【  Move  】 player=4,1, direction=1
     fmt_terminal = Formatter("%(asctime)s %(levelname)s :【 %(name)s 】%(message)s : %(addinfo)s", "%Y-%m-%d %H:%M:%S")
     # fmt_file = Formatter("%(asctime)s 【 %(message)s 】%(addinfo)s\n", "%Y-%m-%d %H:%M:%S")

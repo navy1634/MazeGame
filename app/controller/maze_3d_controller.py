@@ -1,15 +1,10 @@
-from __future__ import annotations
-
 from logging import getLogger
-from typing import TYPE_CHECKING
+from tkinter import Event
 
 from app.config.type import DIRECTION
-from app.controller.MazeController import MazeController
-from app.model.MazeMap import MazeMap
-
-if TYPE_CHECKING:
-    from app.main import App
-
+from app.controller.maze_controller_interface import MazeController
+from app.app import App
+from app.model.maze_map import MazeMap
 
 logger = getLogger("maze_root").getChild(__name__)
 
@@ -27,8 +22,7 @@ class Maze3DController(MazeController):
         """
         return self.model.get_map_viz()
 
-    # キーイベント
-    def _move_player(self, px: int, py: int, direction: DIRECTION) -> tuple[int, int]:
+    def _move_player(self, px: int, py: int, direction: DIRECTION) -> tuple[int, int]:  # type: ignore[override]
         """指定された方向にプレイヤーを移動させる
 
         Args:
@@ -73,7 +67,7 @@ class Maze3DController(MazeController):
         # 押されたキーに対応する新しい方向を返す (対応がなければ現在の方向を維持)
         return direction_turns.get(keysym, current_direction)
 
-    def key_event_handler(self, e) -> None:
+    def key_event_handler(self, e: Event) -> None:
         """
         キーイベント (e) と現在の方向 (current_direction) を受け取り、
         プレイヤーの移動または方向転換を行い、新しい方向を返す。

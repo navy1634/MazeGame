@@ -1,15 +1,10 @@
-from __future__ import annotations
-
 from tkinter import Canvas, Frame, Tk
-from typing import TYPE_CHECKING
 
 from PIL import Image, ImageTk
 
 from app.config import config
 from app.config.type import Maze3DColor
-
-if TYPE_CHECKING:
-    from app.controller.GameController import GameController
+from app.controller.game_controller import GameController
 
 
 class MazeCanvas(Canvas):
@@ -42,13 +37,13 @@ class MazeCanvas(Canvas):
         x, y = self.maze_controller.get_player_position()
         self.player = self.create_image(x * self.tile_size_x, y * self.tile_size_y, image=self.player_image, anchor="nw")
 
-    def draw_player_3d2d(self):
+    def draw_player_3d2d(self) -> None:
         """プレイヤーの描画
         3D迷路で操作するキャラクターを表示
         """
         self.player = self.create_image(730, 550, image=self.player_image, anchor="nw")
 
-    def maze_config(self):
+    def maze_config(self) -> None:
         """タイルサイズの計算"""
         self.maze_width, self.maze_height = self.controller.model.get_maze_size()
         self.tile_size_x = self.width / self.maze_width
@@ -63,7 +58,7 @@ class MazeCanvas(Canvas):
     def draw_map_event(self) -> None:
         """マップとプレイヤーを描画する"""
         self.delete("all")
-        self.direction = self.controller.model.set_direction(self.controller.model._default_direction())
+        self.controller.model.set_direction(self.controller.model.default_direction())
         self.maze_controller.draw_map()
 
     def draw_maze_2d(self) -> None:
@@ -81,14 +76,16 @@ class MazeCanvas(Canvas):
                 # 値に応じた色を決定する
                 if p == 0:
                     color = "#404040"
-                if p == 1:
+                elif p == 1:
                     color = "white"
-                if p == 2:
+                elif p == 2:
                     color = "red"
-                if p == 3:
+                elif p == 3:
                     color = "blue"
-                if p == 4:
+                elif p == 4:
                     color = "green"
+                else:
+                    raise ValueError
                 # 正方形を描画
                 self.create_rectangle(x1, y1, x2, y2, fill=color, outline=color, width=2)
 
@@ -113,14 +110,16 @@ class MazeCanvas(Canvas):
                 # 値に応じた色を決定する
                 if p == 0:
                     color = "#404040"
-                if p == 1:
+                elif p == 1:
                     color = "white"
-                if p == 2:
+                elif p == 2:
                     color = "red"
-                if p == 3:
+                elif p == 3:
                     color = "blue"
-                if p == 4:
+                elif p == 4:
                     color = "green"
+                else:
+                    raise ValueError
                 # 正方形を描画
                 self.create_rectangle(x1, y1, x2, y2, fill=color, outline="black", width=2)
 
@@ -130,84 +129,84 @@ class MazeCanvas(Canvas):
 
         map_viz = self.controller.maze_3d_controller.get_maze_mini_map()
         self._wall_row_first(map_viz)
-        self.create_line(100, 470, 700, 470, fill=Maze3DColor.LAYER1)
+        self.create_line(100, 470, 700, 470, fill=Maze3DColor.LAYER1.value)
 
         if map_viz[7] == 0:
             self.create_line(100, 130, 700, 130, fill=Maze3DColor.LAYER1)
         else:
             self._wall_row_second(map_viz)
             if map_viz[7] == 4:
-                self.create_line(100, 470, 700, 470, fill=Maze3DColor.LAYER4)
-            self.create_line(200, 420, 600, 420, fill=Maze3DColor.LAYER2)
+                self.create_line(100, 470, 700, 470, fill=Maze3DColor.LAYER4.value)
+            self.create_line(200, 420, 600, 420, fill=Maze3DColor.LAYER2.value)
 
             if map_viz[4] == 0:
-                self.create_line(200, 180, 600, 180, fill=Maze3DColor.LAYER2)
+                self.create_line(200, 180, 600, 180, fill=Maze3DColor.LAYER2.value)
             else:
                 self._wall_row_third(map_viz)
                 if map_viz[4] == 4:
-                    self.create_line(200, 420, 600, 420, fill=Maze3DColor.LAYER4)
-                self.create_line(280, 380, 520, 380, fill=Maze3DColor.LAYER3)
+                    self.create_line(200, 420, 600, 420, fill=Maze3DColor.LAYER4.value)
+                self.create_line(280, 380, 520, 380, fill=Maze3DColor.LAYER3.value)
 
                 if map_viz[1] == 0:
-                    self.create_line(280, 220, 520, 220, fill=Maze3DColor.LAYER3)
+                    self.create_line(280, 220, 520, 220, fill=Maze3DColor.LAYER3.value)
                 else:
                     self._wall_row_fourth(map_viz)
                     if map_viz[1] == 4:
-                        self.create_line(280, 380, 520, 380, fill=Maze3DColor.LAYER4)
-                    self.create_line(320, 360, 480, 360, fill=Maze3DColor.LAYER3)
+                        self.create_line(280, 380, 520, 380, fill=Maze3DColor.LAYER4.value)
+                    self.create_line(320, 360, 480, 360, fill=Maze3DColor.LAYER3.value)
 
     def _wall_row_first(self, map_viz: list[int]) -> None:
         if map_viz[9] == 0:
-            self.create_line(0, 80, 100, 130, 100, 470, 0, 520, fill=Maze3DColor.LAYER0)
+            self.create_line([0, 80, 100, 130, 100, 470, 0, 520], fill=Maze3DColor.LAYER0.value)
         else:
-            self.create_line(0, 130, 100, 130, 100, 470, 0, 470, fill=Maze3DColor.LAYER0)
+            self.create_line([0, 130, 100, 130, 100, 470, 0, 470], fill=Maze3DColor.LAYER0.value)
             if map_viz[9] == 4:
-                self.create_line(100, 470, 0, 520, fill=Maze3DColor.LAYER4)
+                self.create_line(100, 470, 0, 520, fill=Maze3DColor.LAYER4.value)
         if map_viz[11] == 0:
-            self.create_line(800, 80, 700, 130, 700, 470, 800, 520, fill=Maze3DColor.LAYER0)
+            self.create_line([800, 80, 700, 130, 700, 470, 800, 520], fill=Maze3DColor.LAYER0.value)
         else:
-            self.create_line(800, 130, 700, 130, 700, 470, 800, 470, fill=Maze3DColor.LAYER0)
+            self.create_line([800, 130, 700, 130, 700, 470, 800, 470], fill=Maze3DColor.LAYER0.value)
             if map_viz[11] == 4:
-                self.create_line(800, 470, 800, 520, fill=Maze3DColor.LAYER4)
+                self.create_line(800, 470, 800, 520, fill=Maze3DColor.LAYER4.value)
 
     def _wall_row_second(self, map_viz: list[int]) -> None:
         if map_viz[6] == 0:
-            self.create_line(100, 130, 200, 180, 200, 420, 100, 470, fill=Maze3DColor.LAYER1)
+            self.create_line([100, 130, 200, 180, 200, 420, 100, 470], fill=Maze3DColor.LAYER1.value)
         else:
-            self.create_line(100, 180, 200, 180, 200, 420, 100, 420, fill=Maze3DColor.LAYER1)
+            self.create_line([100, 180, 200, 180, 200, 420, 100, 420], fill=Maze3DColor.LAYER1.value)
             if map_viz[6] == 4:
-                self.create_line(200, 420, 100, 470, fill=Maze3DColor.LAYER4)
+                self.create_line(200, 420, 100, 470, fill=Maze3DColor.LAYER4.value)
         if map_viz[8] == 0:
-            self.create_line(700, 130, 600, 180, 600, 420, 700, 470, fill=Maze3DColor.LAYER1)
+            self.create_line([700, 130, 600, 180, 600, 420, 700, 470], fill=Maze3DColor.LAYER1.value)
         else:
-            self.create_line(700, 180, 600, 180, 600, 420, 700, 420, fill=Maze3DColor.LAYER1)
+            self.create_line([700, 180, 600, 180, 600, 420, 700, 420], fill=Maze3DColor.LAYER1.value)
             if map_viz[8] == 4:
-                self.create_line(600, 420, 700, 470, fill=Maze3DColor.LAYER4)
+                self.create_line(600, 420, 700, 470, fill=Maze3DColor.LAYER4.value)
 
     def _wall_row_third(self, map_viz: list[int]) -> None:
         if map_viz[3] == 0:
-            self.create_line(200, 180, 280, 220, 280, 380, 200, 420, fill=Maze3DColor.LAYER2)
+            self.create_line([200, 180, 280, 220, 280, 380, 200, 420], fill=Maze3DColor.LAYER2.value)
         else:
-            self.create_line(200, 220, 280, 220, 280, 380, 200, 380, fill=Maze3DColor.LAYER2)
+            self.create_line([200, 220, 280, 220, 280, 380, 200, 380], fill=Maze3DColor.LAYER2.value)
             if map_viz[3] == 4:
-                self.create_line(280, 380, 200, 420, fill=Maze3DColor.LAYER4)
+                self.create_line(280, 380, 200, 420, fill=Maze3DColor.LAYER4.value)
         if map_viz[5] == 0:
-            self.create_line(600, 180, 520, 220, 520, 380, 600, 420, fill=Maze3DColor.LAYER2)
+            self.create_line([600, 180, 520, 220, 520, 380, 600, 420], fill=Maze3DColor.LAYER2.value)
         else:
-            self.create_line(600, 220, 520, 220, 520, 380, 600, 380, fill=Maze3DColor.LAYER2)
+            self.create_line([600, 220, 520, 220, 520, 380, 600, 380], fill=Maze3DColor.LAYER2.value)
             if map_viz[5] == 4:
-                self.create_line(520, 380, 600, 420, fill=Maze3DColor.LAYER4)
+                self.create_line(520, 380, 600, 420, fill=Maze3DColor.LAYER4.value)
 
     def _wall_row_fourth(self, map_viz: list[int]) -> None:
         if map_viz[0] == 0:
-            self.create_line(280, 220, 320, 240, 320, 360, 280, 380, fill=Maze3DColor.LAYER3)
+            self.create_line([280, 220, 320, 240, 320, 360, 280, 380], fill=Maze3DColor.LAYER3.value)
         else:
-            self.create_line(280, 240, 320, 240, 320, 360, 280, 360, fill=Maze3DColor.LAYER3)
+            self.create_line([280, 240, 320, 240, 320, 360, 280, 360], fill=Maze3DColor.LAYER3.value)
             if map_viz[0] == 4:
-                self.create_line(320, 360, 280, 380, fill=Maze3DColor.LAYER4)
+                self.create_line(320, 360, 280, 380, fill=Maze3DColor.LAYER4.value)
         if map_viz[2] == 0:
-            self.create_line(520, 220, 480, 240, 480, 360, 520, 380, fill=Maze3DColor.LAYER3)
+            self.create_line([520, 220, 480, 240, 480, 360, 520, 380], fill=Maze3DColor.LAYER3.value)
         else:
-            self.create_line(520, 240, 480, 240, 480, 360, 520, 360, fill=Maze3DColor.LAYER3)
+            self.create_line([520, 240, 480, 240, 480, 360, 520, 360], fill=Maze3DColor.LAYER3.value)
             if map_viz[2] == 4:
-                self.create_line(480, 360, 520, 380, fill=Maze3DColor.LAYER4)
+                self.create_line(480, 360, 520, 380, fill=Maze3DColor.LAYER4.value)

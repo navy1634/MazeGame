@@ -1,20 +1,16 @@
-from __future__ import annotations
-
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from logging import getLogger
-from typing import TYPE_CHECKING
+from tkinter import Event
 
+from app.app import App
 from app.config import config
-from app.model.MazeMap import MazeMap
-
-if TYPE_CHECKING:
-    from app.main import App
-    from app.view.MazeView import MazeView
+from app.model.maze_map import MazeMap
+from app.view.maze_view import MazeView
 
 logger = getLogger("maze_root").getChild(__name__)
 
 
-class MazeController:
+class MazeController(ABC):
     def __init__(self, app: App, model: MazeMap) -> None:
         self.app = app
         self.model = model
@@ -71,23 +67,20 @@ class MazeController:
 
     # 迷路生成
     def set_maze(self) -> None:
-        self.model.set_seed(self.model.seed)
+        self.model.set_seeds(self.model.seed)
         self.load_maze(seed=self.model.seed)
         self.view.canvas.maze_config()
         self.draw_map()  # 迷路描画
         self.app.controller.unset_key_bind(self.app)
         self.app.controller.set_key_bind(self.app, self)
 
-    def get_map_viz(self) -> list:
+    def get_map_viz(self) -> list[int]:
         map_viz = []
         for i in range(12):
             map_x = self.model.loc.px + config.POS_X[self.model.direction][i]
             map_y = self.model.loc.py + config.POS_Y[self.model.direction][i]
 
-            if 0 < map_x < len(self.map_data[0]) and 0 < map_y < len(self.map_data):
-                data = self.map_data[map_y][map_x]
-            else:
-                data = 0
+            data = self.map_data[map_y][map_x] if 0 < map_x < len(self.map_data[0]) and 0 < map_y < len(self.map_data) else 0
             map_viz.append(data)
         return map_viz
 
@@ -104,7 +97,7 @@ class MazeController:
         return px, py
 
     @abstractmethod
-    def key_event_handler(self, e) -> None:
+    def key_event_handler(self, e: Event) -> None:
         """矢印キーイベント"""
         raise NotImplementedError("key_event_handler is not implemented")
 
@@ -114,7 +107,7 @@ class MazeController:
         self.maze_reset()
         self.app.controller.writeToLog("リセット")
 
-    def maze_reset(self):
+    def maze_reset(self) -> None:
         """迷路のリセットを行う関数"""
         logger.debug("RESET", extra={"addinfo": "位置リセット"})
         self.model.set_default_position()
@@ -124,7 +117,8 @@ class MazeController:
     def restart(self) -> None:
         """迷路のリスタートを行うボタン用の関数"""
         logger.debug("RESTART", extra={"addinfo": "迷路再生成"})
-        self.load_maze(seed=self.model.set_seed(None))  # 迷路の読み込み
+        self.model.set_seeds(None)
+        self.load_maze(seed=self.model.seed)  # 迷路の読み込み
         self.model.set_default_position()
         self.maze_view.canvas.delete("all")
         self.draw_map()

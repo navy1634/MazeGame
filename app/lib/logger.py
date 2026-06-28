@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import os
 from glob import glob
 from operator import itemgetter
@@ -10,9 +8,7 @@ def logfile_remove() -> None:
     ログファイルを管理する関数
     最新5件までを残す
     """
-    file_lists = []
-    for file in glob(os.getcwd() + "/maze_my/logs/*.log"):
-        file_lists.append([file, os.path.getctime(file)])
+    file_lists: list[tuple[str, float]] = [(file, os.path.getctime(file)) for file in glob(os.getcwd() + "/maze_my/logs/*.log")]
     file_lists.sort(key=itemgetter(1), reverse=True)
     MAX_CNT = 5
     for i, file_info in enumerate(file_lists):

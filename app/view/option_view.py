@@ -1,13 +1,8 @@
-from __future__ import annotations
-
 from logging import getLogger
 from tkinter import Button, Frame, Tk
-from typing import TYPE_CHECKING
 
 from app.config import config
-
-if TYPE_CHECKING:
-    from app.controller.GameController import GameController
+from app.controller.game_controller import GameController
 
 
 class OptionView(Frame):
